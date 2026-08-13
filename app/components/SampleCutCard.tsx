@@ -19,7 +19,9 @@ const journey = [
 ] as const;
 const proof = "b53062e7-e436dbd9";
 
-export default function SampleCutCard() {
+type SampleCutCardProps = { privateIntakeHref: string; onChangeSource: () => void };
+
+export default function SampleCutCard({ privateIntakeHref, onChangeSource }: SampleCutCardProps) {
   const [step, setStep] = useState(0);
   const previewReady = step >= 1;
   const veto = step === 2;
@@ -66,13 +68,16 @@ export default function SampleCutCard() {
   ];
   return (
     <section className="sample-cut-card">
-      <header className="judge-hero">
+      <header className="sample-header">
         <div>
-          <p className="eyebrow">Ready sample · interactive Cut Card</p>
-          <h1>From inspiration to permission to cut.</h1>
-          <p>Use this rights-cleared sample to explore the complete three-key Expectation Checksum. Nothing here writes to a customer record or makes a billable YouCam request: YouCam evidence, tailor judgment, and customer consent must agree before cutting is released.</p>
+          <p className="eyebrow">Sample Cut Card</p>
+          <h1>Olive wrap dress</h1>
+          <p>Rights-cleared example · Recorded YouCam result · Nothing uploaded or saved</p>
         </div>
-        <span className="state">Step {step + 1} of {journey.length}</span>
+        <div className="sample-header-actions">
+          <span className="state">Step {step + 1} of {journey.length}</span>
+          <button type="button" className="text-button" onClick={onChangeSource}>Change image source</button>
+        </div>
       </header>
       <ol className="judge-rail" aria-label="Sample Cut Card journey">
         {journey.map(([number, title], index) => (
@@ -84,7 +89,7 @@ export default function SampleCutCard() {
       <div className="judge-stage">
         <section className="judge-visual" aria-label="Visual evidence">
           <header>
-            <div><p className="eyebrow">Recorded YouCam Clothes VTO V3 result</p><h2>{erased ? "Agreement remains. Body input is gone." : "The visual becomes shared evidence."}</h2></div>
+            <div><p className="eyebrow">{previewReady ? "Recorded YouCam Clothes VTO V3 result" : "Private intake prepared"}</p><h2>{erased ? "Agreement remains. Body input is gone." : previewReady ? "The visual becomes shared evidence." : "Consent comes before computation."}</h2></div>
             {previewReady && <code title="Full SHA-256 is documented in D1-RESULTS.md">SHA {proof}</code>}
           </header>
           <div className="judge-image-pair">
@@ -108,7 +113,7 @@ export default function SampleCutCard() {
             <button type="button" className="button secondary" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))}>Back</button>
             {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => setStep((value) => Math.min(journey.length - 1, value + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
           </div>
-          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href="/brief/new">Use my photos</Link></div>
+          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href={privateIntakeHref}>Use my photos</Link></div>
         </aside>
       </div>
       <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1–2-star tailoring complaints · 41 businesses · 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay — a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence →</Link></footer>
