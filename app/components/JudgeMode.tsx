@@ -70,7 +70,7 @@ export default function JudgeMode() {
         <div>
           <p className="eyebrow">Judge Mode · 45-second guided proof</p>
           <h1>From inspiration to permission to cut.</h1>
-          <p>This is a synthetic, no-write walkthrough of the real production workflow. Use Next to inspect the safeguards that make PatternProof more than a VTO wrapper.</p>
+          <p>This is a synthetic, no-write walkthrough of a three-key Expectation Checksum: YouCam evidence, tailor judgment, and customer consent must agree before cutting is released.</p>
         </div>
         <span className="state">Step {step + 1} of {journey.length}</span>
       </header>
