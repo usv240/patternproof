@@ -6,11 +6,11 @@ The central product promise is narrow: the shop and customer approve the same fr
 
 ## Release status
 
-The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The implementation is production-shaped, but a public production claim is blocked until every item in [Live release acceptance](#live-release-acceptance) is recorded against the real Supabase, YouCam, and Vercel environments.
+The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). Real-customer onboarding remains blocked until every item in [Live release acceptance](#live-release-acceptance) is recorded against the real Supabase, YouCam, and Vercel environments.
 
-Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects the poor live input before provider spend; authenticated T5 evidence confirms two units per successful Clothes VTO V3 result; live Supabase signed-URL T6 passed; and the controlled repeated-input T7 check passed. Deployment, rotated release credentials, and final public-browser acceptance remain release gates. Do not invite real customers until every remaining gate passes.
+Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects the poor live input before provider spend; authenticated T5 evidence confirms two units per successful Clothes VTO V3 result; live Supabase signed-URL T6 passed; the controlled repeated-input T7 check passed; the release credential was rotated; and Vercel health, judge/demo boundaries, private-workspace redirect, cache policy, and exact demo-token isolation passed over HTTPS on August 13, 2026. Hosted authentication and a fresh production write-path run remain release gates. Do not invite real customers until every remaining gate passes.
 
-Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0–2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review study—not a prevalence estimate, user validation, or proof of product impact—and it explicitly reports the failure categories PatternProof does not solve.
+Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0â€“2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review studyâ€”not a prevalence estimate, user validation, or proof of product impactâ€”and it explicitly reports the failure categories PatternProof does not solve.
 
 ## Product flow
 
@@ -233,13 +233,13 @@ The user-facing notice is at `/privacy` and is linked from every page. It descri
 
 ## Repository map
 
-- `app/` — pages, components, server routes, health, and maintenance
-- `lib/` — image normalization, security boundaries, Supabase, intake, review, and YouCam services
-- `supabase/` — ordered schema, RLS, Storage, and integrity migrations
-- `tests/` — deterministic unit and contract tests
-- `public/demo/` — byte-pinned, rights-cleared public-demo assets documented in [ASSETS.md](ASSETS.md)
-- `JUDGING.md` — exact zero-login and full hosted judge paths
-- `VALIDATION-PROTOCOL.md` — predeclared usability and prospective impact measurement
-- `D1-RESULTS.md` — live YouCam validation record
-- `SECURITY.md` — security invariants and incident response
-- `ASSETS.md` — asset provenance record
+- `app/` â€” pages, components, server routes, health, and maintenance
+- `lib/` â€” image normalization, security boundaries, Supabase, intake, review, and YouCam services
+- `supabase/` â€” ordered schema, RLS, Storage, and integrity migrations
+- `tests/` â€” deterministic unit and contract tests
+- `public/demo/` â€” byte-pinned, rights-cleared public-demo assets documented in [ASSETS.md](ASSETS.md)
+- `JUDGING.md` â€” exact zero-login and full hosted judge paths
+- `VALIDATION-PROTOCOL.md` â€” predeclared usability and prospective impact measurement
+- `D1-RESULTS.md` â€” live YouCam validation record
+- `SECURITY.md` â€” security invariants and incident response
+- `ASSETS.md` â€” asset provenance record

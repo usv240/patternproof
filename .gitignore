@@ -22,3 +22,4 @@ test-assets/*.jpg
 test-assets/*.jpeg
 test-assets/*.png
 !test-assets/qa-*.jpg
+.vercel
