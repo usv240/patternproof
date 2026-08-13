@@ -46,6 +46,25 @@ export default async function Home() {
       <div className="actions"><Link className="button primary" href="/judge">Enter Judge Mode</Link><Link className="button secondary" href={newBriefHref}>Create a new Cut Card</Link><Link className="text-link" href="/proof">Audit the evidence</Link></div>
       <p className="micro">A visual intent reference — not a fit, construction, or fabric-drape guarantee.</p>
     </section>
-    <section className="steps">{steps.map(([n, title, copy]) => <article key={n}><span>{n}</span><h2>{title}</h2><p>{copy}</p></article>)}</section>
+    <section className="process-section" aria-labelledby="process-title">
+      <div className="process-inner">
+        <header className="process-heading">
+          <div>
+            <p className="eyebrow">The release sequence</p>
+            <h2 id="process-title">One shared intent.<br/>Three keys before the cut.</h2>
+          </div>
+          <p>PatternProof makes the handoff visible: first see the intended garment, then record what can actually be built, and only then ask the customer to release the approved Cut Card.</p>
+        </header>
+        <div className="steps">
+          {steps.map(([n, title, copy]) => (
+            <article key={n}>
+              <span>{n}</span>
+              <h3>{title}</h3>
+              <p>{copy}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   </main>;
 }

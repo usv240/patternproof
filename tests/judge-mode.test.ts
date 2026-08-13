@@ -5,6 +5,7 @@ import test from "node:test";
 const judge = readFileSync(new URL("../app/components/JudgeMode.tsx", import.meta.url), "utf8");
 const page = readFileSync(new URL("../app/judge/page.tsx", import.meta.url), "utf8");
 const home = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+const globalCss = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
 test("Judge Mode is a clearly labelled, no-write guided product story", () => {
   assert.match(judge, /synthetic, no-write walkthrough/);
@@ -34,4 +35,12 @@ test("the public entry path foregrounds Judge Mode and immutable evidence", () =
   assert.match(home, /href="\/judge">Enter Judge Mode/);
   assert.match(page, /href="\/proof">Evidence/);
   assert.match(page, /href="\/s\/demo-olive">Public Cut Card/);
+});
+test("the homepage release sequence stays inside one responsive content grid", () => {
+  assert.match(home, /className="process-inner"/);
+  assert.match(home, /Three keys before the cut/);
+  assert.match(globalCss, /\.process-inner\{width:min\(100%,1120px\);margin:0 auto\}/);
+  assert.match(globalCss, /\.steps\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.doesNotMatch(globalCss, /\.steps article\{[^}]*100vw/);
+  assert.match(globalCss, /@media\(max-width:800px\)[^{]*\{[^}]*\.process-section/);
 });
