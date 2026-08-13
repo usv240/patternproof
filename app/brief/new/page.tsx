@@ -15,5 +15,5 @@ export default async function NewBrief() {
   const result = await supabase.auth.getUser();
   if (!result.data.user || result.error) redirect("/login?next=%2Fbrief%2Fnew");
 
-  return <main className="workflow"><nav className="nav"><Link href="/" className="brand">pattern<span>proof</span></Link><div className="dashboard-nav-actions"><Link className="text-link" href="/brief">All Cut Cards</Link><Link className="text-link" href="/demo">Example</Link></div></nav><section className="intake"><p className="eyebrow">New brief · input check</p><h1>Bring the look into focus.</h1><p className="lede">PatternProof validates the image and consent before it sends anything to AI.</p><NewBriefForm /></section></main>;
+  return <main className="workflow"><nav className="nav"><Link href="/" className="brand">pattern<span>proof</span></Link><div className="dashboard-nav-actions"><Link className="text-link" href="/brief">All Cut Cards</Link><Link className="text-link" href="/create#workspace">Use sample photos</Link></div></nav><section className="intake"><p className="eyebrow">New brief · input check</p><h1>Bring the look into focus.</h1><p className="lede">PatternProof validates the image and consent before it sends anything to AI.</p><NewBriefForm /></section></main>;
 }

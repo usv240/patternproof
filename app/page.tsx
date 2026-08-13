@@ -20,7 +20,6 @@ export default async function Home() {
     const result = await supabase.auth.getUser();
     signedIn = Boolean(result.data.user && !result.error);
   }
-  const newBriefHref = signedIn ? "/brief/new" : "/login?next=%2Fbrief%2Fnew";
 
   return <main>
     <nav className="nav">
@@ -43,7 +42,7 @@ export default async function Home() {
       <p className="eyebrow">Before fabric becomes irreversible</p>
       <h1>Make sure you both mean<br/><em>the same garment.</em></h1>
       <p className="lede">PatternProof is a three-key production interlock: AI evidence, craft judgment, and customer consent must agree before the cut.</p>
-      <div className="actions"><Link className="button primary" href="/judge">Enter Judge Mode</Link><Link className="button secondary" href={newBriefHref}>Create a new Cut Card</Link><Link className="text-link" href="/proof">Audit the evidence</Link></div>
+      <div className="actions"><Link className="button primary" href="/create">Create a Cut Card</Link><Link className="text-link" href="/proof">View technical proof</Link></div>
       <p className="micro">A visual intent reference — not a fit, construction, or fabric-drape guarantee.</p>
     </section>
     <section className="process-section" aria-labelledby="process-title">

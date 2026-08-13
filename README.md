@@ -8,7 +8,7 @@ The central product promise is narrow: the shop and customer approve the same fr
 
 The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). Real-customer onboarding remains blocked until every item in [Live release acceptance](#live-release-acceptance) is recorded against the real Supabase, YouCam, and Vercel environments.
 
-Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects the poor live input before provider spend; authenticated T5 evidence confirms two units per successful Clothes VTO V3 result; live Supabase signed-URL T6 passed; the controlled repeated-input T7 check passed; the release credential was rotated; and Vercel health, judge/demo boundaries, private-workspace redirect, cache policy, and exact demo-token isolation passed over HTTPS on August 13, 2026. Hosted authentication and a fresh production write-path run remain release gates. Do not invite real customers until every remaining gate passes.
+Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects the poor live input before provider spend; authenticated T5 evidence confirms two units per successful Clothes VTO V3 result; live Supabase signed-URL T6 passed; the controlled repeated-input T7 check passed; the release credential was rotated; and Vercel health, unified sample/private boundaries, private-workspace redirect, cache policy, and exact demo-token isolation passed over HTTPS on August 13, 2026. Hosted authentication and a fresh production write-path run remain release gates. Do not invite real customers until every remaining gate passes.
 
 Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0â€“2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review studyâ€”not a prevalence estimate, user validation, or proof of product impactâ€”and it explicitly reports the failure categories PatternProof does not solve.
 
@@ -46,7 +46,7 @@ npm run dev
 
 Visit `http://localhost:3000`. Because the parent workspace path contains `&`, use the npm scripts or direct Node command rather than wrapping the path in an unquoted shell string.
 
-The guided zero-login product story is at `/judge`; the interactive feasibility demo is at `/demo`; and the deterministic immutable record is at `/s/demo-olive`. Live intake requires Supabase configuration.
+The unified Cut Card entry is at `/create`: visitors can explore a rights-cleared, no-write sample or continue to consent-bound private intake. The deterministic immutable record is at `/s/demo-olive`. Legacy `/judge` and `/demo` links redirect into the sample workspace. Live intake requires Supabase configuration.
 
 Judges can follow the bounded zero-login and hosted paths in [JUDGING.md](JUDGING.md). The pre-results usability and prospective-order protocol is in [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md); `npm run pilot:report -- <de-identified-pilot.json>` validates and summarizes pilot records without accepting personal-data fields.
 

@@ -19,7 +19,7 @@ const journey = [
 ] as const;
 const proof = "b53062e7-e436dbd9";
 
-export default function JudgeMode() {
+export default function SampleCutCard() {
   const [step, setStep] = useState(0);
   const previewReady = step >= 1;
   const veto = step === 2;
@@ -65,16 +65,16 @@ export default function JudgeMode() {
     "After approval, the original body photo can be securely queued for erasure while the garment reference, preview, decisions, and proof remain.",
   ];
   return (
-    <section className="judge-mode">
+    <section className="sample-cut-card">
       <header className="judge-hero">
         <div>
-          <p className="eyebrow">Judge Mode · 45-second guided proof</p>
+          <p className="eyebrow">Ready sample · interactive Cut Card</p>
           <h1>From inspiration to permission to cut.</h1>
-          <p>This is a synthetic, no-write walkthrough of a three-key Expectation Checksum: YouCam evidence, tailor judgment, and customer consent must agree before cutting is released.</p>
+          <p>Use this rights-cleared sample to explore the complete three-key Expectation Checksum. Nothing here writes to a customer record or makes a billable YouCam request: YouCam evidence, tailor judgment, and customer consent must agree before cutting is released.</p>
         </div>
         <span className="state">Step {step + 1} of {journey.length}</span>
       </header>
-      <ol className="judge-rail" aria-label="Guided product journey">
+      <ol className="judge-rail" aria-label="Sample Cut Card journey">
         {journey.map(([number, title], index) => (
           <li className={index === step ? "active" : index < step ? "complete" : ""} key={number}>
             <button type="button" onClick={() => setStep(index)} aria-current={index === step ? "step" : undefined}><span>{number}</span>{title}</button>
@@ -108,7 +108,7 @@ export default function JudgeMode() {
             <button type="button" className="button secondary" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))}>Back</button>
             {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => setStep((value) => Math.min(journey.length - 1, value + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
           </div>
-          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href="/demo">Try feasibility decisions</Link></div>
+          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href="/brief/new">Use my photos</Link></div>
         </aside>
       </div>
       <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1–2-star tailoring complaints · 41 businesses · 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay — a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence →</Link></footer>

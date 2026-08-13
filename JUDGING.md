@@ -4,14 +4,14 @@ Replace only the bracketed deployment fields after the final hosted acceptance r
 
 ## 45-second guided path
 
-1. Open `[FINAL_HTTPS_ORIGIN]/judge`.
+1. Open `[FINAL_HTTPS_ORIGIN]/create`.
 2. Use **Next** to see the recorded YouCam result and byte-identical repeat evidence.
 3. Confirm that a human **Not feasible** decision changes Cut Readiness to blocked.
 4. Continue to see a customer veto become a traceable V1 → V2 revision rather than an editable approval.
 5. Watch three independent keysâ€”YouCam evidence, tailor judgment, and customer consentâ€”bind to one Expectation Checksum and change **DO NOT CUT** to **CUT RELEASED**.
 6. End on the privacy-exit state, then open the immutable public record.
 
-For hands-on product logic, open `[FINAL_HTTPS_ORIGIN]/demo`, resolve the feasibility conflict, and lock the sample Cut Card. `/s/demo-olive` is the byte-pinned, read-only frozen record.
+Choose **Use sample photos** for the rights-cleared, no-write journey. Move through preview, human veto, revision replay, consent, and privacy exit. Choose **Use my photos** only for the authenticated, consent-bound live intake. `/s/demo-olive` is the byte-pinned, read-only frozen record.
 
 The zero-login examples use byte-pinned synthetic assets and cannot write customer or database records. They demonstrate product logic and recorded provider evidence, not a new live YouCam call.
 

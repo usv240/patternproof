@@ -94,7 +94,7 @@ This is not a fitting room, measurement system, tailor POS, marketplace, or fit 
 ## Judge access â€” complete before submission
 
 - Live URL: [https://patternproof-nu.vercel.app](https://patternproof-nu.vercel.app)
-- Guided zero-login judge path: `/judge`
+- Unified Cut Card path: `/create` (rights-cleared sample or consent-bound private intake)
 - Public immutable example: `/s/demo-olive`
 - Exact judge path: [JUDGING.md](JUDGING.md)
 - Owner test account or magic-link instructions: `[ADD JUDGING INSTRUCTIONS]`

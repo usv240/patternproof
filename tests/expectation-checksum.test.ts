@@ -37,11 +37,11 @@ test("the visible interlock communicates both physical release states", () => {
   assert.match(component, /SHA-256/);
 });
 
-test("tailor, customer, and Judge Mode share the same interlock component", () => {
+test("tailor, customer, and the ready sample share the same interlock component", () => {
   for (const path of [
     "../app/components/TailorWorkspace.tsx",
     "../app/components/CustomerReview.tsx",
-    "../app/components/JudgeMode.tsx",
+    "../app/components/SampleCutCard.tsx",
   ]) {
     const source = readFileSync(new URL(path, import.meta.url), "utf8");
     assert.match(source, /ExpectationChecksum/);
