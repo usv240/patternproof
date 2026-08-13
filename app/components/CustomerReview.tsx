@@ -4,9 +4,11 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { evaluateCutReadiness } from "../../lib/cut-readiness";
+import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
 import { isPublicDemoToken } from "../../lib/public-demo-token";
 import { shortSnapshotProof } from "../../lib/review-snapshot";
 import CutReadinessPassport from "./CutReadinessPassport";
+import ExpectationChecksum from "./ExpectationChecksum";
 import ShareActions from "./ShareActions";
 
 type Feasibility = {
@@ -167,6 +169,7 @@ export default function CustomerReview({
   const [currentShareUrl, setCurrentShareUrl] = useState<string>();
   const [changeReason, setChangeReason] = useState("");
   const [requestingChange, setRequestingChange] = useState(false);
+  const [acknowledgedAdjustments, setAcknowledgedAdjustments] = useState<Record<string, boolean>>({});
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -223,6 +226,16 @@ export default function CustomerReview({
   const approved =
     !isPublicDemo && Boolean(payload?.revision?.locked || payload?.brief.status === "approved");
 
+  const adjustmentRequirements = useMemo(
+    () => (payload?.revision?.requirements ?? []).filter(
+      (requirement) => feasibilityOf(requirement)?.status === "with_adjustment",
+    ),
+    [payload],
+  );
+  const adjustmentsAcknowledged = adjustmentRequirements.every(
+    (requirement) => acknowledgedAdjustments[requirement.id],
+  );
+
   const readiness = evaluateCutReadiness({
     rightsConfirmed: payload?.consent.rights_confirmed === true &&
       payload?.consent.body_processing_confirmed === true,
@@ -234,6 +247,11 @@ export default function CustomerReview({
     snapshotFrozen: Boolean(payload?.brief.snapshot_sha256),
     customerApproved: approved,
     changeRequested: Boolean(payload?.changeRequest),
+  });
+  const expectationChecksum = evaluateExpectationChecksum({
+    visualEvidence: Boolean(payload?.revision?.renderUrl && payload?.brief.snapshot_sha256),
+    craftDecision: ready,
+    customerConsent: approved,
   });
   async function requestChange() {
     const revision = payload?.revision;
@@ -281,7 +299,10 @@ export default function CustomerReview({
   }
   async function approve() {
     const revision = payload?.revision;
-    if (isPublicDemo || !payload || !revision || !ready || !confirm || approving || payload.changeRequest) return;
+    if (
+      isPublicDemo || !payload || !revision || !ready || !adjustmentsAcknowledged ||
+      !confirm || approving || payload.changeRequest
+    ) return;
 
     // This full server-provided digest is the approval precondition. The shortened
     // fingerprints shown in the interface are never sent in its place.
@@ -298,6 +319,7 @@ export default function CustomerReview({
           body: JSON.stringify({
             revisionId: revision.id,
             snapshotSha256,
+            acknowledgedAdjustmentIds: adjustmentRequirements.map((requirement) => requirement.id),
           }),
         },
       );
@@ -522,6 +544,9 @@ export default function CustomerReview({
         </div>
 
         <div className="customer-requirements">
+          {!isPublicDemo && (
+            <ExpectationChecksum checksum={expectationChecksum} proof={snapshotProof} compact />
+          )}
           <CutReadinessPassport readiness={readiness} proof={snapshotProof} compact />
           <section className="review-consent" aria-labelledby="consent-heading">
             <p className="eyebrow">
@@ -580,6 +605,20 @@ export default function CustomerReview({
                     <p>{feasibility.tailor_note}</p>
                   </div>
                 )}
+                {!isPublicDemo && !approved && feasibility?.status === "with_adjustment" && (
+                  <label className="adjustment-acknowledgement">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(acknowledgedAdjustments[requirement.id])}
+                      onChange={(event) => setAcknowledgedAdjustments((current) => ({
+                        ...current,
+                        [requirement.id]: event.target.checked,
+                      }))}
+                      disabled={approving || Boolean(payload.changeRequest)}
+                    />
+                    <span>I understand this exact adjustment.</span>
+                  </label>
+                )}
               </article>
             );
           })}
@@ -617,7 +656,7 @@ export default function CustomerReview({
                   type="checkbox"
                   checked={confirm}
                   onChange={(event) => setConfirm(event.target.checked)}
-                  disabled={!ready || approving || Boolean(payload.changeRequest)}
+                  disabled={!ready || !adjustmentsAcknowledged || approving || Boolean(payload.changeRequest)}
                 />
                 <span>
                   I reviewed the preview, requirements, and tailor adjustments, and I approve this
@@ -627,7 +666,7 @@ export default function CustomerReview({
               <button
                 type="button"
                 className="button primary"
-                disabled={!ready || !confirm || approving || Boolean(payload.changeRequest)}
+                disabled={!ready || !adjustmentsAcknowledged || !confirm || approving || Boolean(payload.changeRequest)}
                 onClick={approve}
               >
                 {approving ? "Locking approved revision..." : "Approve and lock this Cut Card"}
@@ -667,6 +706,11 @@ export default function CustomerReview({
                 <p className="approval-blocked">
                   Approval activates only after the preview and complete, feasible tailor review
                   are ready.
+                </p>
+              )}
+              {ready && !adjustmentsAcknowledged && (
+                <p className="approval-blocked">
+                  Confirm every customer-visible tailor adjustment before the final approval key can turn.
                 </p>
               )}
               {error && (

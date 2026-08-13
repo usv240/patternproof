@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const steps = [
   ["01", "See the intent", "Start with a garment reference and a customer photo."],
   ["02", "Make it buildable", "A tailor confirms what can be made as shown, adjusted, or not feasibly made."],
-  ["03", "Cut with clarity", "The shared, approved Cut Card locks the exact brief before fabric is cut."],
+  ["03", "Turn three keys", "YouCam evidence, tailor judgment, and customer consent release one checksum-bound Cut Card."],
 ];
 
 export default async function Home() {
@@ -42,7 +42,7 @@ export default async function Home() {
     <section className="hero">
       <p className="eyebrow">Before fabric becomes irreversible</p>
       <h1>Make sure you both mean<br/><em>the same garment.</em></h1>
-      <p className="lede">PatternProof turns inspiration into a tailor-feasibility-checked, customer-approved Cut Card.</p>
+      <p className="lede">PatternProof is a three-key production interlock: AI evidence, craft judgment, and customer consent must agree before the cut.</p>
       <div className="actions"><Link className="button primary" href="/judge">Enter Judge Mode</Link><Link className="button secondary" href={newBriefHref}>Create a new Cut Card</Link><Link className="text-link" href="/proof">Audit the evidence</Link></div>
       <p className="micro">A visual intent reference — not a fit, construction, or fabric-drape guarantee.</p>
     </section>

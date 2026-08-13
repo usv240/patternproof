@@ -50,13 +50,16 @@ export async function POST(
 
   let revisionId: unknown;
   let snapshotSha256: unknown;
+  let acknowledgedAdjustmentIds: unknown;
   try {
     const body = await readBoundedJsonBody(request, MAX_BODY_BYTES) as {
       revisionId?: unknown;
       snapshotSha256?: unknown;
+      acknowledgedAdjustmentIds?: unknown;
     };
     revisionId = body.revisionId;
     snapshotSha256 = body.snapshotSha256;
+    acknowledgedAdjustmentIds = body.acknowledgedAdjustmentIds;
   } catch (caught) {
     return error(
       "Invalid approval request.",
@@ -66,7 +69,10 @@ export async function POST(
 
   if (
     !isStrictUuid(revisionId) ||
-    !isSnapshotSha256(snapshotSha256)
+    !isSnapshotSha256(snapshotSha256) ||
+    !Array.isArray(acknowledgedAdjustmentIds) ||
+    acknowledgedAdjustmentIds.some((id) => !isStrictUuid(id)) ||
+    new Set(acknowledgedAdjustmentIds).size !== acknowledgedAdjustmentIds.length
   ) {
     return error("This approval link is invalid or expired.", 404);
   }
@@ -74,6 +80,40 @@ export async function POST(
   try {
     const supabase = createSupabaseAdminClient();
     const tokenHash = hashShareToken(token);
+    const frozen = await supabase
+      .from("brief")
+      .select("shared_snapshot, shared_revision_id, shared_snapshot_sha256, approved_revision_id, status")
+      .eq("share_token_hash", tokenHash)
+      .eq("shared_revision_id", revisionId)
+      .eq("shared_snapshot_sha256", snapshotSha256)
+      .in("status", ["awaiting_customer", "approved"])
+      .gt("token_expires_at", new Date().toISOString())
+      .is("share_token_revoked_at", null)
+      .maybeSingle();
+    if (frozen.error || !frozen.data) {
+      return error("This approval is stale, already used, or no longer valid.", 409);
+    }
+    const snapshot = frozen.data.shared_snapshot as {
+      requirements?: Array<{ id?: unknown; feasibility?: { status?: unknown } | null }>;
+    } | null;
+    const requiredAdjustments = (snapshot?.requirements ?? [])
+      .filter((requirement) => requirement.feasibility?.status === "with_adjustment")
+      .map((requirement) => requirement.id)
+      .filter(isStrictUuid)
+      .sort();
+    const acknowledged = [...acknowledgedAdjustmentIds].sort();
+    if (
+      requiredAdjustments.length !== acknowledged.length ||
+      requiredAdjustments.some((id, index) => id !== acknowledged[index])
+    ) {
+      return error("Confirm every tailor adjustment before approving.", 409);
+    }
+    if (frozen.data.status === "approved" && frozen.data.approved_revision_id === revisionId) {
+      return NextResponse.json(
+        { approved: true, revisionId, snapshotSha256, idempotent: true },
+        { headers: privateHeaders },
+      );
+    }
     const { data, error: approvalError } = await supabase.rpc(
       "approve_shared_revision",
       {

@@ -6,8 +6,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 
 import { evaluateCutReadiness } from "../../lib/cut-readiness";
+import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
 import { shortSnapshotProof } from "../../lib/review-snapshot";
 import CutReadinessPassport from "./CutReadinessPassport";
+import ExpectationChecksum from "./ExpectationChecksum";
 import RevisionReplay from "./RevisionReplay";
 import ShareActions from "./ShareActions";
 
@@ -520,6 +522,11 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
   const snapshotProof = workspace.brief.snapshotSha256
     ? shortSnapshotProof(workspace.brief.snapshotSha256)
     : undefined;
+  const expectationChecksum = evaluateExpectationChecksum({
+    visualEvidence: Boolean(revision.renderUrl && workspace.brief.snapshotSha256),
+    craftDecision: readiness.checks.find((check) => check.id === "feasible")?.complete === true,
+    customerConsent: approved,
+  });
 
   return (
     <section className="tailor-workspace">
@@ -687,6 +694,7 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
         </div>
 
         <div className="workspace-requirements">
+          <ExpectationChecksum checksum={expectationChecksum} proof={snapshotProof} compact />
           <CutReadinessPassport readiness={readiness} proof={snapshotProof} compact />
           <h2>Customer non-negotiables</h2>
           <p className="helper">A not-feasible decision deliberately blocks sharing and approval.</p>

@@ -8,7 +8,7 @@ Replace only the bracketed deployment fields after the final hosted acceptance r
 2. Use **Next** to see the recorded YouCam result and byte-identical repeat evidence.
 3. Confirm that a human **Not feasible** decision changes Cut Readiness to blocked.
 4. Continue to see a customer veto become a traceable V1 → V2 revision rather than an editable approval.
-5. Confirm that all six independent conditions are required for **CUT READY**.
+5. Watch three independent keysâ€”YouCam evidence, tailor judgment, and customer consentâ€”bind to one Expectation Checksum and change **DO NOT CUT** to **CUT RELEASED**.
 6. End on the privacy-exit state, then open the immutable public record.
 
 For hands-on product logic, open `[FINAL_HTTPS_ORIGIN]/demo`, resolve the feasibility conflict, and lock the sample Cut Card. `/s/demo-olive` is the byte-pinned, read-only frozen record.
@@ -25,7 +25,7 @@ Use the invited account described in the private Devpost testing field: `[ADD IN
 4. Complete the human feasibility gate and create the 14-day customer link.
 5. Open it in a private window, inspect the frozen digest, and request a change.
 6. Return as the tailor: confirm cutting is blocked, accept the request, and see Revision Replay create V2.
-7. Complete V2, open its fresh link, and approve the exact frozen proof.
+7. Complete V2, open its fresh link, acknowledge every customer-visible adjustment, and approve the exact frozen proof.
 8. Return to the owner view and confirm the approved Cut Card is immutable.
 
 ## What to evaluate
@@ -33,7 +33,7 @@ Use the invited account described in the private Devpost testing field: `[ADD IN
 - **Technological implementation:** server-only YouCam V3, private signed inputs, normalized/re-hosted output, content-addressed idempotency, budget admission, RLS, atomic approval/veto serialization, and cleanup fencing.
 - **Design:** one continuous intake → preview → human feasibility → customer veto/revision → private approval → immutable Cut Card journey, including honest failure states.
 - **Potential impact:** a specific pre-cut communication checkpoint. The formative research supports problem discovery; [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md) defines the prospective test. No remake-reduction claim is made without results.
-- **Idea quality:** virtual try-on becomes agreement evidence between two people making a one-off garment, rather than a retail fitting-room effect.
+- **Idea quality:** virtual try-on becomes one key in a physical-production interlock. AI evidence, craft judgment, and customer consent must resolve to the same frozen SHA-256 Expectation Checksum before cutting is released.
 
 ## Boundaries
 

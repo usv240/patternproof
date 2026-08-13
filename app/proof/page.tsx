@@ -2,7 +2,9 @@ import { createHash } from "node:crypto";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
 import { PUBLIC_DEMO_RENDER_SHA256, PUBLIC_DEMO_SNAPSHOT_SHA256 } from "../../lib/public-demo";
+import ExpectationChecksum from "../components/ExpectationChecksum";
 
 export const metadata: Metadata = {
   title: "Evidence ledger · PatternProof",
@@ -13,6 +15,11 @@ const repeatedOutputBytes = 141_631;
 const repeatedOutputDigest = "b53062e7e436dbd96379a9f12d23972c8108c3f454e72ff03dd2483245ef43e9";
 
 export default function ProofPage() {
+  const expectationChecksum = evaluateExpectationChecksum({
+    visualEvidence: true,
+    craftDecision: true,
+    customerConsent: true,
+  });
   const assertionDigest = createHash("sha256")
     .update(`${repeatedOutputDigest}:${repeatedOutputBytes}:2`, "utf8")
     .digest("hex");
@@ -68,8 +75,13 @@ export default function ProofPage() {
         </article>
       </section>
 
+      <ExpectationChecksum
+        checksum={expectationChecksum}
+        proof={PUBLIC_DEMO_SNAPSHOT_SHA256.slice(0, 18)}
+      />
+
       <section className="integrity-rule">
-        <p className="eyebrow">Approval integrity rule</p>
+        <p className="eyebrow">Evidence completeness beneath the three-key gate</p>
         <h2>Six conditions, or no approval.</h2>
         <ol>
           <li>Exact revision</li><li>Valid preview proof</li><li>Complete human decisions</li>

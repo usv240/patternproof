@@ -64,21 +64,21 @@ The rules require a 1–3 minute public video, explicit explanation of the YouCa
 **Narration:**
 
 > “The customer does not have to accept a persuasive image. They can veto this exact frozen proof. That request wins a database race against approval, blocks cutting, and becomes a traceable version two instead of an edited history.”
-### 2:18–2:38 — consent to cut and production proof
+### 2:18-2:40 — three keys and the Expectation Checksum
 
-**Picture:** complete V2; show the Cut Readiness Passport move to **6/6 CUT READY** as the customer approves. Montage the locally generated QR, print action, WhatsApp handoff, body-photo erasure, and `/proof` byte-identical repeat evidence.
-
-**Narration:**
-
-> “Only six conditions produce Cut Ready: rights, preview, human decisions, feasibility, frozen proof, and customer approval. Then the record can travel by print or WhatsApp, and the body photo can be erased while the agreement remains.”
-### 2:38–2:50 — money shot and honest impact
-
-**Picture:** put the approved Cut Card on the phone beside the fabric. The scissors lift; cut to logo before they touch.
+**Picture:** complete V2. In the customer view, acknowledge the exact neckline adjustment, then approve. Hold on the three-key gate as **YouCam**, **Tailor**, and **Customer** turn from waiting to keyed; the same SHA-256 proof changes **DO NOT CUT** to **CUT RELEASED**. Flash the 6/6 evidence passport, local QR, and print action.
 
 **Narration:**
 
-> “We do not promise fewer remakes. A pilot would measure late changes. PatternProof is the agreement before the cut.”
+> “Approval is not one persuasive checkbox. YouCam supplies visual evidence. The tailor supplies the construction promise. The customer confirms every adjustment. PatternProof binds those three independent keys to one frozen Expectation Checksum. No green, no cut.”
 
+### 2:40-2:50 — money shot and honest impact
+
+**Picture:** scan the printed Cut Card beside the fabric; show **CUT RELEASED** and the matching short proof. The scissors lift; cut to logo before they touch.
+
+**Narration:**
+
+> “We do not predict fit. We protect shared intent at the irreversible moment.”
 **End card:** `PatternProof · Agree before the cut · Built with YouCam Clothes VTO V3`
 
 ## Editing acceptance

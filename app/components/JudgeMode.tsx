@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { evaluateCutReadiness } from "../../lib/cut-readiness";
+import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
 import CutReadinessPassport from "./CutReadinessPassport";
+import ExpectationChecksum from "./ExpectationChecksum";
 
 const journey = [
   ["01", "Private intent"],
@@ -41,12 +43,17 @@ export default function JudgeMode() {
     customerApproved: approved,
     changeRequested,
   });
+  const expectationChecksum = evaluateExpectationChecksum({
+    visualEvidence: previewReady,
+    craftDecision: step >= 3,
+    customerConsent: approved,
+  });
   const headings = [
     "Consent precedes computation.",
     "The API is essential, but not the final authority.",
     "The safest answer can be no.",
     "Disagreement becomes product state.",
-    "Approval is a six-condition protocol.",
+    "Three independent keys release the cut.",
     "Privacy is a lifecycle, not a paragraph.",
   ];
   const explanations = [
@@ -54,7 +61,7 @@ export default function JudgeMode() {
     "In three predeclared stress conditions, the recorded YouCam call transferred the garment. Repeated inputs also produced byte-identical output in our observation.",
     "A tailor's not-feasible decision disables sharing. AI never converts visual plausibility into a construction promise.",
     "The customer can veto the frozen proof. That database-bound request blocks approval, revokes the old link when accepted, and creates V2.",
-    "Rights, preview, human decisions, feasibility, frozen snapshot, and customer approval must all agree before CUT READY appears.",
+    "YouCam evidence, the tailor's construction promise, and customer consent are bound to one SHA-256 Expectation Checksum. No green, no cut.",
     "After approval, the original body photo can be securely queued for erasure while the garment reference, preview, decisions, and proof remain.",
   ];
   return (
@@ -94,6 +101,7 @@ export default function JudgeMode() {
           {step === 2 && <div className="judge-veto"><strong>Cutting blocked</strong><span>High square neckline: not feasible in V1.</span></div>}
           {step === 3 && <div className="judge-replay"><span>V1</span><strong>Customer: “Raise the neckline.”</strong><i aria-hidden="true">→</i><span>V2</span><strong>Tailor adjustment recorded</strong></div>}
           {step === 1 && <dl className="judge-proof-facts"><div><dt>Stress set</dt><dd>3/3 observed transfers</dd></div><div><dt>Repeat</dt><dd>Byte-identical SHA-256</dd></div><div><dt>Cost</dt><dd>2 units per admitted attempt</dd></div></dl>}
+          {step >= 1 && <ExpectationChecksum checksum={expectationChecksum} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
           {step >= 2 && <CutReadinessPassport readiness={readiness} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
           {step === 5 && <div className="judge-erasure"><strong>Customer photo hidden</strong><span>Secure erasure is queued; the approved Cut Card remains auditable.</span></div>}
           <div className="judge-controls">

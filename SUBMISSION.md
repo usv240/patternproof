@@ -4,7 +4,7 @@
 
 ## Short description
 
-PatternProof turns a customer's garment inspiration into a tailor-feasibility-checked, customer-approved Cut Card. A tailor uses YouCam Clothes Virtual Try-On to create a body-specific visual-intent preview, records what can actually be constructed, and shares one frozen revision for approval before fabric is cut.
+PatternProof is a three-key production interlock for made-to-order clothing. YouCam supplies body-specific visual evidence, the tailor supplies the construction promise, and the customer supplies consent. PatternProof binds all three to one frozen SHA-256 Expectation Checksum before fabric is cut.
 
 ## Entry details
 
@@ -31,9 +31,9 @@ PatternProof does not claim to predict physical fit or eliminate remakes. It cre
 5. The tailor marks every non-negotiable as â€œCan make as shown,â€ â€œCan make with adjustment,â€ or â€œNot feasible.â€ Adjustments require a customer-visible note; a not-feasible item blocks approval.
 6. The tailor turns the YouCam result into an Agreement Map: every coordinate-specific pin is linked to one non-negotiable and inherits its green, amber, or blocked decision state.
 7. A shared Cut Readiness Passport exposes six conditionsâ€”rights, preview, human decisions, feasibility, frozen snapshot, and customer approvalâ€”so â€œready to cutâ€ is an explicit protocol rather than a visual impression.
-8. Starting customer review freezes the exact preview, reference proof, requirements, decisions, spatial annotations, consent evidence, shop, and revision digest.
-9. The customer can approve the exact Cut Card or submit a snapshot-bound change request. A change request races safely with approval: only one outcome can win, and an open veto blocks cutting at the database boundary.
-10. The tailor accepts the veto into a verified version+1. Revision Replay preserves the reason and prior version instead of silently editing history. An approved revision remains immutable.
+8. Starting customer review freezes the exact preview, reference proof, requirements, decisions, spatial annotations, consent evidence, shop, and revision digest into an Expectation Checksum.
+9. The customer must acknowledge each customer-visible tailor adjustment before approval. The server independently derives the required adjustment IDs from the frozen snapshot and demands an exact match; a blind or bypassed checkbox cannot turn the customer key.
+10. The customer can instead submit a snapshot-bound veto. That request races safely with approval, blocks cutting at the database boundary, and becomes a verified version+1 in Revision Replay rather than silently editing history.
 11. After approval, the original body photo can be erased while the agreement evidence remains. The review link can be handed off through WhatsApp, reflecting the real conversational channel without exposing the credential to an external sharing service.
 
 ## Why YouCam is essential
@@ -66,11 +66,13 @@ Production proofing already exists in printing and embroidery. PatternProof appl
 - the customer's own body;
 - an arbitrary rights-cleared garment inspiration reference;
 - a requirement-linked Agreement Map with human constructability decisions;
-- a six-condition Consent-to-Cut Protocol shared across tailor and customer views;
+- a six-condition evidence passport beneath a three-key production interlock;
+- an Expectation Checksum binding YouCam evidence, tailor judgment, and customer consent to one frozen revision;
+- server-enforced acknowledgement of every customer-visible adjustment;
 - a customer veto that becomes a traceable revision rather than an ambiguous message;
 - a frozen, versioned approval before an individual garment is cut.
 
-This is not a fitting room, measurement system, tailor POS, marketplace, or fit guarantee. It is the visual approval layer between conversation and cutting.
+This is not a fitting room, measurement system, tailor POS, marketplace, or fit guarantee. It is the visual approval layer between conversation and cutting: no green checksum, no cut.
 
 ## Privacy and limitations
 
