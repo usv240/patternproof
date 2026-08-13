@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { evaluateCutReadiness } from "../../lib/cut-readiness";
 import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
@@ -23,6 +23,16 @@ type SampleCutCardProps = { privateIntakeHref: string; onChangeSource: () => voi
 
 export default function SampleCutCard({ privateIntakeHref, onChangeSource }: SampleCutCardProps) {
   const [step, setStep] = useState(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const selectStep = (nextStep: number) => {
+    setStep(nextStep);
+    window.requestAnimationFrame(() => {
+      stageRef.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  };
   const previewReady = step >= 1;
   const veto = step === 2;
   const changeRequested = step === 3;
@@ -72,7 +82,7 @@ export default function SampleCutCard({ privateIntakeHref, onChangeSource }: Sam
         <div>
           <p className="eyebrow">Sample Cut Card</p>
           <h1>Olive wrap dress</h1>
-          <p>Rights-cleared example · Recorded YouCam result · Nothing uploaded or saved</p>
+          <p>Rights-cleared example &middot; Recorded YouCam result &middot; Nothing uploaded or saved</p>
         </div>
         <div className="sample-header-actions">
           <span className="state">Step {step + 1} of {journey.length}</span>
@@ -82,11 +92,11 @@ export default function SampleCutCard({ privateIntakeHref, onChangeSource }: Sam
       <ol className="judge-rail" aria-label="Sample Cut Card journey">
         {journey.map(([number, title], index) => (
           <li className={index === step ? "active" : index < step ? "complete" : ""} key={number}>
-            <button type="button" onClick={() => setStep(index)} aria-current={index === step ? "step" : undefined}><span>{number}</span>{title}</button>
+            <button type="button" onClick={() => selectStep(index)} aria-current={index === step ? "step" : undefined}><span>{number}</span>{title}</button>
           </li>
         ))}
       </ol>
-      <div className="judge-stage">
+      <div className="judge-stage" ref={stageRef} tabIndex={-1}>
         <section className="judge-visual" aria-label="Visual evidence">
           <header>
             <div><p className="eyebrow">{previewReady ? "Recorded YouCam Clothes VTO V3 result" : "Private intake prepared"}</p><h2>{erased ? "Agreement remains. Body input is gone." : previewReady ? "The visual becomes shared evidence." : "Consent comes before computation."}</h2></div>
@@ -99,24 +109,24 @@ export default function SampleCutCard({ privateIntakeHref, onChangeSource }: Sam
               {previewReady ? <div className="judge-output-frame"><Image src="/demo/render-olive.jpg" alt="Recorded synthetic YouCam visual-intent preview" width={600} height={800} priority />{step >= 2 && <span className="judge-pin">1</span>}</div> : <div className="judge-private-input"><strong>Private body input</strong><span>Rights and processing consent recorded before upload.</span></div>}
             </figure>
           </div>
-          <p className="comparison-disclaimer">Visual intent only — not a fit, construction, measurement, fabric, or final-appearance guarantee.</p>
+          <p className="comparison-disclaimer">Visual intent only &mdash; not a fit, construction, measurement, fabric, or final-appearance guarantee.</p>
         </section>
         <aside className="judge-explainer" aria-live="polite">
           <p className="eyebrow">{journey[step][1]}</p><h2>{headings[step]}</h2><p>{explanations[step]}</p>
           {step === 2 && <div className="judge-veto"><strong>Cutting blocked</strong><span>High square neckline: not feasible in V1.</span></div>}
-          {step === 3 && <div className="judge-replay"><span>V1</span><strong>Customer: “Raise the neckline.”</strong><i aria-hidden="true">→</i><span>V2</span><strong>Tailor adjustment recorded</strong></div>}
+          {step === 3 && <div className="judge-replay"><span>V1</span><strong>Customer: &ldquo;Raise the neckline.&rdquo;</strong><i aria-hidden="true">&rarr;</i><span>V2</span><strong>Tailor adjustment recorded</strong></div>}
           {step === 1 && <dl className="judge-proof-facts"><div><dt>Stress set</dt><dd>3/3 observed transfers</dd></div><div><dt>Repeat</dt><dd>Byte-identical SHA-256</dd></div><div><dt>Cost</dt><dd>2 units per admitted attempt</dd></div></dl>}
-          {step >= 1 && <ExpectationChecksum checksum={expectationChecksum} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
-          {step >= 2 && <CutReadinessPassport readiness={readiness} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
+          {step >= 1 && step <= 4 && <ExpectationChecksum checksum={expectationChecksum} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
+          {step >= 2 && step <= 4 && <CutReadinessPassport readiness={readiness} proof={step >= 3 ? "41b874-aeff97" : undefined} compact />}
           {step === 5 && <div className="judge-erasure"><strong>Customer photo hidden</strong><span>Secure erasure is queued; the approved Cut Card remains auditable.</span></div>}
           <div className="judge-controls">
-            <button type="button" className="button secondary" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))}>Back</button>
-            {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => setStep((value) => Math.min(journey.length - 1, value + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
+            <button type="button" className="button secondary" disabled={step === 0} onClick={() => selectStep(Math.max(0, step - 1))}>Back</button>
+            {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => selectStep(Math.min(journey.length - 1, step + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
           </div>
           <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href={privateIntakeHref}>Use my photos</Link></div>
         </aside>
       </div>
-      <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1–2-star tailoring complaints · 41 businesses · 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay — a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence →</Link></footer>
+      <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1&ndash;2-star tailoring complaints &middot; 41 businesses &middot; 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay &mdash; a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence &rarr;</Link></footer>
     </section>
   );
 }

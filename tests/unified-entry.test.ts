@@ -1,4 +1,4 @@
-﻿import assert from "node:assert/strict";
+import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -31,7 +31,7 @@ test("the sample exposes all six differentiated workflow stages", () => {
   }
   assert.match(sample, /CutReadinessPassport/);
   assert.match(sample, /Byte-identical SHA-256/);
-  assert.match(sample, /108 de-identified 1\u20132-star tailoring complaints/);
+  assert.match(sample, /108 de-identified 1&ndash;2-star tailoring complaints/);
   assert.match(sample, /bounded negative-sample finding, not prevalence/);
 });
 
@@ -49,6 +49,9 @@ test("one Cut Card entry reveals only the selected image source workflow", () =>
   assert.match(entry, /replaceState\(null, "", "\/create\?source=sample"\)/);
   assert.match(entry, /replaceState\(null, "", "\/create"\)/);
   assert.match(sample, /Change image source/);
+  assert.match(sample, /scrollIntoView/);
+  assert.match(sample, /prefers-reduced-motion/);
+  assert.match(sample, /ref=\{stageRef\}/);
   assert.match(entry, /privateIntakeHref/);
   assert.match(createPage, /initialSource=\{query\.source === "sample" \? "sample" : "choose"\}/);
   assert.match(createPage, /signedIn\s*\?\s*"\/brief\/new"/);
