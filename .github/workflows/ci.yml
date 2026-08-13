@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Reject tracked environment files
+        shell: bash
+        run: |
+          unexpected="$(git ls-files -- '.env' '.env.*' ':(exclude).env.example')"
+          if [[ -n "$unexpected" ]]; then
+            echo "A private environment file is tracked. Remove it before release."
+            exit 1
+          fi
+
+      - name: Reject known secret fingerprints
+        shell: bash
+        run: |
+          if git grep -I -q -E 'sk-o-8-[A-Za-z0-9_-]{12,}' -- .; then
+            echo "A YouCam credential fingerprint is present in a tracked file."
+            exit 1
+          fi
+          if git grep -I -q -E '(-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ[A-Za-z0-9+/]{20,})' -- .; then
+            echo "A private or console-key fingerprint is present in a tracked file."
+            exit 1
+          fi
+          if git grep -I -q -E '(YOUCAM_API_KEY|SUPABASE_SERVICE_ROLE_KEY|CRON_SECRET)=[^[:space:]]+' -- . ':(exclude).env.example'; then
+            echo "A server secret appears to be assigned in a tracked file."
+            exit 1
+          fi
+
+      - name: Typecheck, test, and lint
+        run: npm run check
+
+      - name: Production build
+        run: npm run build
+
+      - name: Audit all dependencies
+        run: npm audit --audit-level=low
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=low

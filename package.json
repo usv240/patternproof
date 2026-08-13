@@ -1,0 +1,49 @@
+{
+  "name": "patternproof",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=22 <25",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "node ./node_modules/next/dist/bin/next dev",
+    "build": "node ./node_modules/next/dist/bin/next build",
+    "start": "node ./node_modules/next/dist/bin/next start",
+    "lint": "node ./node_modules/eslint/bin/eslint.js .",
+    "test": "node ./node_modules/tsx/dist/cli.mjs --test tests/*.test.ts",
+    "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "check": "node ./node_modules/typescript/bin/tsc --noEmit && node ./node_modules/tsx/dist/cli.mjs --test tests/*.test.ts && node ./node_modules/eslint/bin/eslint.js .",
+    "pilot:report": "node ./node_modules/tsx/dist/cli.mjs scripts/pilot-report.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.57.0",
+    "@types/qrcode": "^1.5.5",
+    "next": "^15.5.2",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sharp": "0.35.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "eslint": "^9.25.0",
+    "eslint-config-next": "^15.5.2",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.13",
+    "tsx": "^4.23.5",
+    "typescript": "^5.8.3"
+  },
+  "overrides": {
+    "nanoid": "3.3.17",
+    "next": {
+      "postcss": "8.5.26"
+    },
+    "sharp": "0.35.3"
+  }
+}
