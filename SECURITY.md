@@ -38,7 +38,7 @@ PatternProof handles customer body images and approval evidence. Treat the app a
 
 ## Deployment requirements
 
-1. Apply bootstrap 001 and every SQL migration through 020 in the exact order in `supabase/README.md`; 020 is the final readiness sentinel.
+1. Apply bootstrap 001 and every SQL migration through 022 in the exact order in `supabase/README.md`; 022 is the final readiness sentinel.
 2. Configure `APP_URL` as the exact HTTPS production origin.
 3. Store all secrets only in the deployment platform and `.env.local`; never use `NEXT_PUBLIC_` for secrets.
 4. Configure the maintenance secret, result-host allowlist, monitored privacy contact, and scheduled cleanup route.

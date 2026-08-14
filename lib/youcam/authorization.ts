@@ -1,4 +1,4 @@
-import "server-only";
+﻿import "server-only";
 
 import {
   createSupabaseAdminClient,
@@ -223,6 +223,12 @@ export async function consumeReservedRenderBudget(input: {
   });
   if (result.error) {
     const message = result.error.message.toLowerCase();
+    if (message.includes("guest render limit")) {
+      throw new RenderAccessError(
+        "This temporary workspace includes two live previews. Start a fresh private workspace to test another image pair.",
+        429,
+      );
+    }
     if (message.includes("owner render limit")) {
       throw new RenderAccessError(
         "Render limit reached. Try again in a few minutes.",

@@ -7,6 +7,7 @@ import { useMemo, useRef, useState } from "react";
 import { evaluateCutReadiness } from "../../lib/cut-readiness";
 import { evaluateExpectationChecksum } from "../../lib/expectation-checksum";
 import CutReadinessPassport from "./CutReadinessPassport";
+import GuestWorkspaceButton from "./GuestWorkspaceButton";
 import ExpectationChecksum from "./ExpectationChecksum";
 
 const journey = [
@@ -19,9 +20,7 @@ const journey = [
 ] as const;
 const proof = "b53062e7-e436dbd9";
 
-type SampleCutCardProps = { privateIntakeHref: string; onChangeSource: () => void };
-
-export default function SampleCutCard({ privateIntakeHref, onChangeSource }: SampleCutCardProps) {
+export default function SampleCutCard() {
   const [step, setStep] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
   const selectStep = (nextStep: number) => {
@@ -86,9 +85,16 @@ export default function SampleCutCard({ privateIntakeHref, onChangeSource }: Sam
         </div>
         <div className="sample-header-actions">
           <span className="state">Step {step + 1} of {journey.length}</span>
-          <button type="button" className="text-button" onClick={onChangeSource}>Change image source</button>
+
         </div>
       </header>
+      <aside className="private-creation-banner" aria-label="Create a private Cut Card">
+        <div>
+          <strong>Ready to create your own Cut Card?</strong>
+          <span>Upload your photos in an isolated private workspace. No account needed.</span>
+        </div>
+        <GuestWorkspaceButton>Create with my photos</GuestWorkspaceButton>
+      </aside>
       <ol className="judge-rail" aria-label="Sample Cut Card journey">
         {journey.map(([number, title], index) => (
           <li className={index === step ? "active" : index < step ? "complete" : ""} key={number}>
@@ -123,7 +129,7 @@ export default function SampleCutCard({ privateIntakeHref, onChangeSource }: Sam
             <button type="button" className="button secondary" disabled={step === 0} onClick={() => selectStep(Math.max(0, step - 1))}>Back</button>
             {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => selectStep(Math.min(journey.length - 1, step + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
           </div>
-          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link><Link href={privateIntakeHref}>Use my photos</Link></div>
+          <div className="judge-links"><Link href="/proof">Open evidence ledger</Link></div>
         </aside>
       </div>
       <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1&ndash;2-star tailoring complaints &middot; 41 businesses &middot; 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay &mdash; a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence &rarr;</Link></footer>

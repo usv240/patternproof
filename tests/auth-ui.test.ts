@@ -8,12 +8,11 @@ test("local auth accepts the exact PatternProof callback origin", async () => {
   assert.match(config, /"http:\/\/localhost:3000\/auth\/callback"/);
 });
 
-test("the landing page visibly distinguishes signed-in and signed-out visitors", async () => {
+test("the landing page makes account state secondary to creation", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /supabase\.auth\.getUser\(\)/);
-  assert.match(source, />Signed in</);
-  assert.match(source, />Tailor sign in</);
-  assert.match(source, /\/auth\/signout/);
+  assert.match(source, />My Cut Cards</);
+  assert.doesNotMatch(source, />Tailor sign in</);
 });
 
 test("authenticated pages redirect before rendering private owner controls", async () => {
@@ -24,7 +23,7 @@ test("authenticated pages redirect before rendering private owner controls", asy
   for (const path of paths) {
     const source = await readFile(path, "utf8");
     assert.match(source, /supabase\.auth\.getUser\(\)/);
-    assert.match(source, /redirect\("\/login\?next=/);
+    assert.match(source, /redirect\("\/create"\)/);
   }
 });
 

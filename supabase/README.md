@@ -2,21 +2,22 @@
 
 Apply this release only to a new, empty Supabase project. The three bootstrap files together are migration 001. Run every later file once in ascending order; they are additive and are not alternatives to the bootstrap.
 
-The canonical, deployable history is `supabase/migrations/`. Apply every timestamped file once in filename order. The first three files form release migration 001; all later files are additive. `20260813000100_customer_change_requests.sql` is the final sentinel migration.
+The canonical, deployable history is `supabase/migrations/`. Apply every timestamped file once in filename order. The first three files form release migration 001; all later files are additive. `20260814000100_draft_discard_consent_cascade.sql` is the final sentinel migration.
 
-Do not skip 012 or 014: both are part of the ordered release history even though later migrations advance the readiness sentinel. Do not reorder, partially rerun, or paste these files into an unknown legacy schema. Migrations 015 through 020 are each safe to rerun at their own completed sentinel; 015's legacy-budget correction is fenced to sentinel 14 and therefore runs exactly once. PostgreSQL rollback is not automatic; restore a tested backup or ship a reviewed forward migration. When upgrading an active deployment, pause render admissions and workers until 015 commits so an already-open transaction cannot resume the retired one-unit function body; this does not apply to a fresh empty project. Apply 016 through 020 as complete transactions before deploying code that expects sentinel 20, and keep traffic disabled until the live Auth/RLS/Storage verification passes.
+Do not skip 012 or 014: both are part of the ordered release history even though later migrations advance the readiness sentinel. Do not reorder, partially rerun, or paste these files into an unknown legacy schema. Migrations 015 through 022 are each safe to rerun at their own completed sentinel; 015's legacy-budget correction is fenced to sentinel 14 and therefore runs exactly once. PostgreSQL rollback is not automatic; restore a tested backup or ship a reviewed forward migration. When upgrading an active deployment, pause render admissions and workers until 015 commits so an already-open transaction cannot resume the retired one-unit function body; this does not apply to a fresh empty project. Apply 016 through 022 as complete transactions before deploying code that expects sentinel 22, and keep traffic disabled until the live Auth/RLS/Storage verification passes.
 
 ## Project configuration
 
 - Keep the `brief-images` bucket private. `migrations/20260812000300_storage.sql` sets a 10 MB object limit and allows only `image/jpeg` and `image/png`.
 - Set Supabase Auth Site URL to the exact production `APP_URL`.
 - Add `APP_URL/auth/callback` to the Auth redirect allowlist.
-- Enable email magic links, restrict pilot onboarding, and configure provider email/rate limits.
+- Enable anonymous sign-ins for the zero-login judge path. Keep Supabase Auth attack protection, deployment monitoring, and provider abuse controls enabled; migration 021 enforces a two-attempt lifetime YouCam ceiling for anonymous users. Add CAPTCHA only when the client supplies and verifies its provider token end to end.
+- Configure email magic links only if returning pilot owners need durable cross-device access.
 - Keep the service-role key server-only. Never place it in a `NEXT_PUBLIC_` variable or use it to simulate a browser RLS test.
 
 ## Readiness sentinel
 
-After all files commit, this must return exactly one row with migration `20`:
+After all files commit, this must return exactly one row with migration `22`:
 
 ```sql
 select migration, installed_at

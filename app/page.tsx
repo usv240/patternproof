@@ -25,17 +25,8 @@ export default async function Home() {
     <nav className="nav">
       <Link href="/" className="brand">pattern<span>proof</span></Link>
       <div className="dashboard-nav-actions">
-        {signedIn ? (
-          <>
-            <span className="signed-in-badge">Signed in</span>
-            <Link className="text-link" href="/brief">Tailor workspace</Link>
-            <form action="/auth/signout" method="post">
-              <button type="submit" className="text-button">Sign out</button>
-            </form>
-          </>
-        ) : (
-          <Link className="text-link" href="/login?next=%2Fbrief">Tailor sign in</Link>
-        )}
+        {signedIn && <Link className="text-link" href="/brief">My Cut Cards</Link>}
+        <Link className="text-link" href="/proof">Technical proof</Link>
       </div>
     </nav>
     <section className="hero">

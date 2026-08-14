@@ -6,15 +6,15 @@ The central product promise is narrow: the shop and customer approve the same fr
 
 ## Release status
 
-The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). Real-customer onboarding remains blocked until every item in [Live release acceptance](#live-release-acceptance) is recorded against the real Supabase, YouCam, and Vercel environments.
+The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). The final hosted acceptance evidence is recorded in [RELEASE-ACCEPTANCE.md](RELEASE-ACCEPTANCE.md).
 
-Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects the poor live input before provider spend; authenticated T5 evidence confirms two units per successful Clothes VTO V3 result; live Supabase signed-URL T6 passed; the controlled repeated-input T7 check passed; the release credential was rotated; and Vercel health, unified sample/private boundaries, private-workspace redirect, cache policy, and exact demo-token isolation passed over HTTPS on August 13, 2026. Hosted authentication and a fresh production write-path run remain release gates. Do not invite real customers until every remaining gate passes.
+Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects poor live input before provider spend; T5 confirms two units per successful Clothes VTO V3 result; live signed-URL T6 passed; controlled repeated-input T7 produced byte-identical output; the exposed credential was rotated; and the zero-account production journey passed from consent-bound intake through private V3 generation, human feasibility, frozen customer review, approval, immutable owner readback, and explicit draft cleanup on August 14, 2026. This is production acceptance evidence, not a claim of measured customer outcomes; prospective impact validation remains governed by [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md).
 
-Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0â€“2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review studyâ€”not a prevalence estimate, user validation, or proof of product impactâ€”and it explicitly reports the failure categories PatternProof does not solve.
+Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0–2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review study—not a prevalence estimate, user validation, or proof of product impact—and it explicitly reports the failure categories PatternProof does not solve.
 
 ## Product flow
 
-1. A tailor signs in by Supabase magic link.
+1. A visitor opens an isolated Supabase anonymous session with one click. No email or password is required; an optional magic link can still identify a returning pilot owner.
 2. The browser receives single-purpose private upload grants. The server validates each JPG/PNG, limits pixels and bytes, rotates orientation, converts to sRGB JPEG, strips embedded metadata, and records SHA-256 digests.
 3. A server-only YouCam request uses short-lived signed input URLs. The returned image is allowlisted, downloaded, validated, normalized, and stored in the private bucket.
 4. The tailor records each non-negotiable and an explicit feasibility decision. `not_feasible` blocks customer review; an adjustment requires a customer-visible note.
@@ -26,7 +26,7 @@ Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manu
 ## Architecture and trust boundaries
 
 - Next.js 15 App Router and React 19 provide the application and server routes.
-- Supabase provides magic-link authentication, PostgreSQL, row-level security, RPC transactions, and the private `brief-images` bucket.
+- Supabase provides isolated anonymous sessions, optional magic-link authentication, PostgreSQL, row-level security, RPC transactions, and the private `brief-images` bucket.
 - Perfect Corp YouCam Clothes VTO creates the visual-intent preview.
 - Vercel hosts the reference deployment and invokes one authenticated daily maintenance job.
 - Browsers are untrusted. They never receive the YouCam key or Supabase service-role key.
@@ -46,7 +46,7 @@ npm run dev
 
 Visit `http://localhost:3000`. Because the parent workspace path contains `&`, use the npm scripts or direct Node command rather than wrapping the path in an unquoted shell string.
 
-The unified Cut Card entry is at `/create`: visitors can explore a rights-cleared, no-write sample or continue to consent-bound private intake. The deterministic immutable record is at `/s/demo-olive`. Legacy `/judge` and `/demo` links redirect into the sample workspace. Live intake requires Supabase configuration.
+The unified Cut Card entry is at `/create`: visitors immediately explore a rights-cleared, no-write sample, then can create a separate private Cut Card with their own consent-bound photos in an isolated guest workspace. The deterministic immutable record is at `/s/demo-olive`. Legacy `/judge` and `/demo` links redirect into the sample workspace. Live intake requires Supabase configuration, including anonymous sign-ins.
 
 Judges can follow the bounded zero-login and hosted paths in [JUDGING.md](JUDGING.md). The pre-results usability and prospective-order protocol is in [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md); `npm run pilot:report -- <de-identified-pilot.json>` validates and summarizes pilot records without accepting personal-data fields.
 
@@ -107,15 +107,17 @@ Use a new, empty Supabase project for the pilot. Apply each file once in the SQL
 | 017 | `supabase/migrations/20260812002100_body_photo_erasure_claim_fix.sql` | Forward fix for the unambiguous, retryable body-photo erasure claim. |
 | 018 | `supabase/migrations/20260812002200_spatial_agreement_notes.sql` | Tenant-scoped spatial notes that freeze into customer approval. |
 | 019 | `supabase/migrations/20260812003000_requirement_linked_agreement_map.sql` | Requirement-linked, decision-colored Agreement Map; health sentinel 19. |
-| 020 | `supabase/migrations/20260813000100_customer_change_requests.sql` | Snapshot-bound customer veto, approval race guard, and traceable revision replay; final health sentinel. Run last. |
+| 020 | `supabase/migrations/20260813000100_customer_change_requests.sql` | Snapshot-bound customer veto, approval race guard, and traceable revision replay; health sentinel 20. |
+| 021 | `supabase/migrations/20260813000200_guest_render_ceiling.sql` | Zero-login isolated workspaces, exact retry idempotency, and a two-attempt lifetime YouCam ceiling for anonymous users. |
+| 022 | `supabase/migrations/20260814000100_draft_discard_consent_cascade.sql` | Forward fix for safe consent cascade and deterministic cleanup-manifest return during incomplete-draft discard. |
 
 After applying SQL:
 
 1. Confirm `brief-images` is private, limited to 10 MB, and accepts only `image/jpeg` and `image/png`. Do not switch it public.
 2. In Supabase Auth URL Configuration, set Site URL to `APP_URL` and add `APP_URL/auth/callback` to the redirect allowlist.
-3. Enable email magic links, restrict pilot onboarding, and configure provider email/rate limits before invitations.
+3. Enable anonymous sign-ins for zero-login judging. Keep Supabase Auth attack protection, deployment monitoring, and provider abuse controls enabled; anonymous users are additionally fenced to two lifetime YouCam attempts in PostgreSQL. Add CAPTCHA only when the client supplies and verifies the provider token end to end. Configure email magic links only if returning pilot owners need durable cross-device access.
 4. Run the two-user isolation and service-function tests listed in [supabase/README.md](supabase/README.md). Never treat the service-role key as an RLS test client.
-5. Verify this query returns migration `18` before deployment:
+5. Verify this query returns migration `22` before deployment:
 
 ```sql
 select migration, installed_at
@@ -123,7 +125,7 @@ from public.patternproof_release
 where singleton = true;
 ```
 
-Do not reorder, partially rerun, or apply these files to an unknown legacy schema. Database rollback is not automatic; restore from a tested backup or apply a reviewed forward migration. On an upgrade with live render traffic, pause render admissions and workers until migration 015 commits so no transaction can resume the retired one-unit function body; a fresh empty deployment is unaffected. Apply 016 through 020 as complete transactions before deploying code that expects sentinel 20, and keep traffic disabled until the post-migration Auth/RLS/Storage checks pass.
+Do not reorder, partially rerun, or apply these files to an unknown legacy schema. Database rollback is not automatic; restore from a tested backup or apply a reviewed forward migration. On an upgrade with live render traffic, pause render admissions and workers until migration 015 commits so no transaction can resume the retired one-unit function body; a fresh empty deployment is unaffected. Apply 016 through 022 as complete transactions before deploying code that expects sentinel 22, and keep traffic disabled until the post-migration Auth/RLS/Storage checks pass.
 
 ## YouCam release configuration
 
@@ -140,7 +142,7 @@ Do not reorder, partially rerun, or apply these files to an unknown legacy schem
 3. Set `APP_URL` to the final custom HTTPS origin, update the Supabase Site URL/redirect allowlist, and redeploy.
 4. Deploy [vercel.json](vercel.json). It schedules `GET /api/maintenance/intake-cleanup` at `0 3 * * *` (once daily at approximately 03:00 UTC). This is compatible with Vercel Hobby's daily cron restriction.
 5. Vercel automatically sends `CRON_SECRET` as the bearer authorization header. Confirm the cron appears under Project Settings > Cron Jobs and inspect its first invocation log.
-6. Request `GET /api/health`. A ready release returns HTTP 200 with `{"status":"ok"}`. Missing configuration, the private bucket, or migration 020 returns HTTP 503.
+6. Request `GET /api/health`. A ready release returns HTTP 200 with `{"status":"ok"}`. Missing configuration, the private bucket, or migration 022 returns HTTP 503.
 
 Official references: [Vercel cron security and Hobby scheduling](https://vercel.com/docs/cron-jobs/manage-cron-jobs) and [Supabase private bucket behavior](https://supabase.com/docs/guides/storage/buckets/fundamentals).
 
@@ -233,13 +235,13 @@ The user-facing notice is at `/privacy` and is linked from every page. It descri
 
 ## Repository map
 
-- `app/` â€” pages, components, server routes, health, and maintenance
-- `lib/` â€” image normalization, security boundaries, Supabase, intake, review, and YouCam services
-- `supabase/` â€” ordered schema, RLS, Storage, and integrity migrations
-- `tests/` â€” deterministic unit and contract tests
-- `public/demo/` â€” byte-pinned, rights-cleared public-demo assets documented in [ASSETS.md](ASSETS.md)
-- `JUDGING.md` â€” exact zero-login and full hosted judge paths
-- `VALIDATION-PROTOCOL.md` â€” predeclared usability and prospective impact measurement
-- `D1-RESULTS.md` â€” live YouCam validation record
-- `SECURITY.md` â€” security invariants and incident response
-- `ASSETS.md` â€” asset provenance record
+- `app/` — pages, components, server routes, health, and maintenance
+- `lib/` — image normalization, security boundaries, Supabase, intake, review, and YouCam services
+- `supabase/` — ordered schema, RLS, Storage, and integrity migrations
+- `tests/` — deterministic unit and contract tests
+- `public/demo/` — byte-pinned, rights-cleared public-demo assets documented in [ASSETS.md](ASSETS.md)
+- `JUDGING.md` — exact zero-login and full hosted judge paths
+- `VALIDATION-PROTOCOL.md` — predeclared usability and prospective impact measurement
+- `D1-RESULTS.md` — live YouCam validation record
+- `SECURITY.md` — security invariants and incident response
+- `ASSETS.md` — asset provenance record

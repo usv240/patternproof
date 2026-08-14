@@ -1,25 +1,25 @@
 # PatternProof judge guide
 
-Replace only the bracketed deployment fields after the final hosted acceptance run.
+Production judge path for the public PatternProof deployment. No account or credentials are required.
 
 ## 45-second guided path
 
-1. Open `[FINAL_HTTPS_ORIGIN]/create`.
+1. Open [https://patternproof-nu.vercel.app/create](https://patternproof-nu.vercel.app/create).
 2. Use **Next** to see the recorded YouCam result and byte-identical repeat evidence.
 3. Confirm that a human **Not feasible** decision changes Cut Readiness to blocked.
 4. Continue to see a customer veto become a traceable V1 → V2 revision rather than an editable approval.
-5. Watch three independent keysâ€”YouCam evidence, tailor judgment, and customer consentâ€”bind to one Expectation Checksum and change **DO NOT CUT** to **CUT RELEASED**.
+5. Watch three independent keys—YouCam evidence, tailor judgment, and customer consent—bind to one Expectation Checksum and change **DO NOT CUT** to **CUT RELEASED**.
 6. End on the privacy-exit state, then open the immutable public record.
 
-Choose **Use sample photos** for the rights-cleared, no-write journey. Move through preview, human veto, revision replay, consent, and privacy exit. Choose **Use my photos** only for the authenticated, consent-bound live intake. `/s/demo-olive` is the byte-pinned, read-only frozen record.
+The sample opens immediately and never writes a customer record. Choose **Create with my photos** to open an isolated, consent-bound guest workspace without an email or password. `/s/demo-olive` is the byte-pinned, read-only frozen record.
 
 The zero-login examples use byte-pinned synthetic assets and cannot write customer or database records. They demonstrate product logic and recorded provider evidence, not a new live YouCam call.
 
 ## Full hosted path
 
-Use the invited account described in the private Devpost testing field: `[ADD INVITED TEST EMAIL OR MAGIC-LINK PROCEDURE]`.
+No invited account is required.
 
-1. Sign in and create a brief with the provided rights-cleared fixtures.
+1. Open `/create`, choose **Create with my photos**, and create a brief with the provided rights-cleared fixtures.
 2. Confirm the poor-body fixture is rejected before a billable request.
 3. Create a valid brief and generate the YouCam Clothes Virtual Try-On V3 preview.
 4. Complete the human feasibility gate and create the 14-day customer link.

@@ -35,27 +35,22 @@ test("the sample exposes all six differentiated workflow stages", () => {
   assert.match(sample, /bounded negative-sample finding, not prevalence/);
 });
 
-test("one Cut Card entry reveals only the selected image source workflow", () => {
+test("one Cut Card entry opens the working sample and offers one dedicated private creation action", () => {
   assert.match(home, /href="\/create">Create a Cut Card/);
   assert.doesNotMatch(home, /Enter Judge Mode|href="\/judge"/);
-  assert.match(createPage, /CutCardEntry/);
-  assert.doesNotMatch(createPage, /<SampleCutCard/);
-  assert.match(entry, /How would you like to start\?/);
-  assert.match(entry, /Explore with sample photos/);
-  assert.match(entry, /Create with my photos/);
-  assert.match(entry, /source === "sample"/);
-  assert.match(entry, /setSource\("sample"\)/);
-  assert.match(entry, /setSource\("choose"\)/);
-  assert.match(entry, /replaceState\(null, "", "\/create\?source=sample"\)/);
-  assert.match(entry, /replaceState\(null, "", "\/create"\)/);
-  assert.match(sample, /Change image source/);
+  assert.match(createPage, /<CutCardEntry \/>/);
+  assert.match(entry, /<SampleCutCard \/>/);
+  assert.match(sample, /Create with my photos/);
+  assert.match(sample, /Ready to create your own Cut Card\?/);
+  assert.match(sample, /isolated private workspace\. No account needed/);
+  assert.match(sample, /private-creation-banner/);
+  assert.doesNotMatch(sample, /Replace sample with my photos|Use my photos/);
+  assert.match(sample, /GuestWorkspaceButton/);
   assert.match(sample, /scrollIntoView/);
   assert.match(sample, /prefers-reduced-motion/);
   assert.match(sample, /ref=\{stageRef\}/);
-  assert.match(entry, /privateIntakeHref/);
-  assert.match(createPage, /initialSource=\{query\.source === "sample" \? "sample" : "choose"\}/);
-  assert.match(createPage, /signedIn\s*\?\s*"\/brief\/new"/);
-  assert.match(createPage, /"\/login\?next=%2Fbrief%2Fnew"/);
+  assert.doesNotMatch(entry, /How would you like to start\?|setSource/);
+  assert.doesNotMatch(createPage, /login\?next=/);
   assert.match(legacyJudge, /redirect\("\/create\?source=sample"\)/);
   assert.match(legacyDemo, /redirect\("\/create\?source=sample"\)/);
 });

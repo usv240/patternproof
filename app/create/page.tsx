@@ -12,19 +12,13 @@ export const metadata = {
   description: "Start with a rights-cleared sample or privately upload your own customer and garment photos.",
 };
 
-type CreateCutCardPageProps = { searchParams: Promise<{ source?: string }> };
-
-export default async function CreateCutCardPage({ searchParams }: CreateCutCardPageProps) {
-  const query = await searchParams;
+export default async function CreateCutCardPage() {
   let signedIn = false;
   if (isSupabaseAuthConfigured()) {
     const supabase = await createSupabaseServerClient();
     const result = await supabase.auth.getUser();
     signedIn = Boolean(result.data.user && !result.error);
   }
-  const privateIntakeHref = signedIn
-    ? "/brief/new"
-    : "/login?next=%2Fbrief%2Fnew";
 
   return (
     <main className="workflow">
@@ -35,15 +29,11 @@ export default async function CreateCutCardPage({ searchParams }: CreateCutCardP
           {signedIn ? (
             <Link className="text-link" href="/brief">Tailor workspace</Link>
           ) : (
-            <Link className="text-link" href="/login?next=%2Fbrief">Tailor sign in</Link>
+            <span className="private-by-default">No account needed</span>
           )}
         </div>
       </nav>
-      <CutCardEntry
-        privateIntakeHref={privateIntakeHref}
-        signedIn={signedIn}
-        initialSource={query.source === "sample" ? "sample" : "choose"}
-      />
+      <CutCardEntry />
     </main>
   );
 }

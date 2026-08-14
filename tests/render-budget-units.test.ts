@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -84,9 +84,9 @@ test("exact spent attempts are idempotent and new attempts charge two atomically
   assert.match(fn, /raise exception 'global render budget exhausted'/);
 });
 
-test("health readiness requires the erasure-claim fix sentinel", () => {
+test("health readiness requires the latest release sentinel", () => {
   const health = source("app/api/health/route.ts");
 
-  assert.match(health, /\.eq\("migration", 20\)/);
-  assert.doesNotMatch(health, /\.eq\("migration", 16\)/);
+  assert.match(health, /\.eq\("migration", 22\)/);
+  assert.doesNotMatch(health, /\.eq\("migration", 20\)/);
 });

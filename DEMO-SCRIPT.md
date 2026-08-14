@@ -33,7 +33,7 @@ The rules require a 1–3 minute public video, explicit explanation of the YouCa
 
 ### 0:38–0:59 — private intake and quality gate
 
-**Picture:** sign in; start a Cut Card; select the synthetic customer and garment images; show consent and rights confirmations. Briefly select the poor body fixture and show the local rejection, then restore the clean fixture.
+**Picture:** from `/create`, choose **Create with my photos**; the isolated guest workspace opens without login. Select the synthetic customer and garment images; show consent and rights confirmations. Briefly select the poor body fixture and show the local rejection, then restore the clean fixture.
 
 **Narration:**
 

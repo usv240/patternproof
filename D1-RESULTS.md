@@ -8,7 +8,7 @@ This is an evidence record, not a marketing claim. Temporary signed URLs, task I
 ## Environment safety
 
 - [x] .env.local is ignored and secret values are absent from tracked source.
-- [ ] Rotate the credential previously displayed in chat/screenshots before any public deployment.
+- [x] Credential previously displayed in chat/screenshots was rotated before the public deployment.
 - [x] All repository QA inputs are project-authorized synthetic fixtures documented in ASSETS.md.
 - [x] Live result files and the redacted machine report remain ignored under test-results/.
 
@@ -97,4 +97,4 @@ Decision: **PASS.** The provider reports 2 units per successful V3 result. Patte
 - [x] Exact Clothes VTO V3 cost is 2 units per successful result image from the official feature-cost API.
 - [x] Hosted Supabase signed inputs, live V3 generation, private result re-hosting, and signed result retrieval passed end to end.
 - [x] Controlled identical-input repeat returned the same output digest; product cache still prevents duplicate spend.
-- [ ] Rotate the exposed provider credential before public deployment.
+- [x] Exposed provider credential rotated before public deployment; the replacement exists only in deployment/local secret stores.

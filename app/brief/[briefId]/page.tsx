@@ -11,7 +11,7 @@ import TailorWorkspace from "../../components/TailorWorkspace";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Tailor workspace · PatternProof",
+  title: "Cut Card workspace · PatternProof",
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -21,10 +21,10 @@ export default async function BriefWorkspace({
   params: Promise<{ briefId: string }>;
 }) {
   const { briefId } = await params;
-  if (!isSupabaseAuthConfigured()) redirect("/login?next=%2Fbrief");
+  if (!isSupabaseAuthConfigured()) redirect("/create");
   const supabase = await createSupabaseServerClient();
   const result = await supabase.auth.getUser();
-  if (!result.data.user || result.error) redirect("/login?next=%2Fbrief");
+  if (!result.data.user || result.error) redirect("/create");
 
   return (
     <main className="tailor-page">

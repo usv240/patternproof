@@ -50,11 +50,11 @@ function displayDate(value: string) {
 }
 
 export default async function BriefDashboard() {
-  if (!isSupabaseAuthConfigured()) redirect("/login");
+  if (!isSupabaseAuthConfigured()) redirect("/create");
 
   const supabase = await createSupabaseServerClient();
   const userResult = await supabase.auth.getUser();
-  if (userResult.error || !userResult.data.user) redirect("/login?next=%2Fbrief");
+  if (userResult.error || !userResult.data.user) redirect("/create");
 
   const briefResult = await supabase
     .from("brief")
@@ -85,17 +85,14 @@ export default async function BriefDashboard() {
         <Link href="/" className="brand">pattern<span>proof</span></Link>
         <div className="dashboard-nav-actions">
           <Link className="text-link" href="/brief/new">New Cut Card</Link>
-          <form action="/auth/signout" method="post">
-            <button type="submit" className="text-button">Sign out</button>
-          </form>
         </div>
       </nav>
 
       <section className="brief-dashboard">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">Private tailor workspace</p>
-            <h1>Your Cut Cards.</h1>
+            <p className="eyebrow">Private guest workspace</p>
+            <h1>My Cut Cards.</h1>
             <p>Resume a feasibility review, retrieve an approved record, or start fresh.</p>
           </div>
           <Link className="button primary" href="/brief/new">Create Cut Card</Link>
@@ -126,7 +123,7 @@ export default async function BriefDashboard() {
         ) : (
           <div className="dashboard-empty">
             <h2>No Cut Cards yet.</h2>
-            <p>Your first private brief takes about two minutes to prepare.</p>
+            <p>Your first private Cut Card takes about two minutes to prepare.</p>
             <Link className="button primary" href="/brief/new">Start the first one</Link>
           </div>
         )}

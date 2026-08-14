@@ -208,8 +208,8 @@ export default function NewBriefForm() {
           <span className="upload-number">01</span>
           <strong>Customer photo</strong>
           <small>
-            One person · forward-facing · {bodyFramingGuidance} · bright, even light · long side
-            512+ px · short side 384+ px · JPG/PNG · &le; 10 MB
+            One person &middot; forward-facing &middot; {bodyFramingGuidance} &middot; bright, even light &middot; long side
+            512+ px &middot; short side 384+ px &middot; JPG/PNG &middot; &le; 10 MB
           </small>
           <input
             type="file"
@@ -279,17 +279,14 @@ export default function NewBriefForm() {
               ? "Validating and removing metadata..."
               : phase === "ready"
                 ? "Private intake ready"
-                : "Create private brief"}
+                : "Create private Cut Card"}
       </button>
 
       <div aria-live="polite">
         {errors.form && (
           <div className="form-error" role="alert">
-            <strong>Could not create the brief.</strong>
+            <strong>Could not create the Cut Card.</strong>
             <p>{errors.form}</p>
-            {errors.form.toLowerCase().includes("sign in") && (
-              <Link href="/login?next=%2Fbrief%2Fnew">Sign in with a magic link</Link>
-            )}
           </div>
         )}
 
@@ -301,7 +298,7 @@ export default function NewBriefForm() {
               before creating a customer approval link.
             </p>
             <Link className="button secondary" href={`/brief/${result.briefId}`}>
-              Continue in tailor workspace
+              Continue to visual agreement
             </Link>
           </div>
         )}

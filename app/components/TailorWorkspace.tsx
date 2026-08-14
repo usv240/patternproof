@@ -488,7 +488,7 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
         <h1>{loading ? "Loading private brief..." : "This brief cannot be opened."}</h1>
         {error && (
           <div role="alert">
-            <p>{error} <Link href={"/login?next=" + encodeURIComponent("/brief/" + briefId)}>Sign in again</Link></p>
+            <p>{error} <Link href="/create">Restart the secure workspace</Link></p>
             <button
               type="button"
               className="button secondary"

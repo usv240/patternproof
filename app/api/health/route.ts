@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 
 import { hasValidMaintenanceSecret } from "../../../lib/intake-maintenance";
 import {
@@ -44,7 +44,7 @@ export async function GET() {
         .from("patternproof_release")
         .select("migration")
         .eq("singleton", true)
-        .eq("migration", 20)
+        .eq("migration", 22)
         .maybeSingle(),
       admin.storage.getBucket("brief-images"),
     ]);
