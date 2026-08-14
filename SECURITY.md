@@ -8,7 +8,7 @@ PatternProof handles customer body images and approval evidence. Treat the app a
 - Tailor writes use an authenticated Supabase session plus row-level security.
 - Customer links are 256-bit bearer tokens. Only SHA-256 hashes are stored.
 - Service-role access is limited to server routes that first prove either owner access or a valid, unexpired customer token.
-- YouCam receives short-lived signed input URLs. Its result is downloaded, decoded, normalized, and re-hosted in private storage.
+- YouCam receives short-lived signed input URLs. Image results are downloaded, decoded, normalized, and re-hosted privately; post-approval MP4 proof is strictly content-typed, byte-bounded, hashed, and re-hosted privately.
 
 ## Cut Card invariants
 
@@ -24,7 +24,7 @@ PatternProof handles customer body images and approval evidence. Treat the app a
 
 - Raw JPG/PNG files upload directly to a private temporary object using a one-path signed grant.
 - The server decodes with Sharp, enforces pixel/byte limits, rotates orientation, converts to sRGB JPEG, and removes EXIF/XMP/IPTC metadata.
-- Normalized inputs and renders carry SHA-256 digests.
+- Normalized inputs and image evidence carry SHA-256 digests. Approved motion proof also carries a SHA-256 digest but is deliberately excluded from the immutable construction checksum.
 - Every server-signed object path is checked against `{shop}/{brief}/{revision}/{canonical filename}` before signing.
 - Temporary-object deletion state is persisted so failed cleanup can be retried by maintenance rather than silently forgotten.
 
@@ -32,13 +32,13 @@ PatternProof handles customer body images and approval evidence. Treat the app a
 
 - Magic-link requests are throttled without retaining raw email/IP values in process memory.
 - Intake issuance is recorded in a durable ledger, so deleting a draft cannot reset quota.
-- Render work is reserved atomically before the external API call. Identical concurrent requests reuse one opaque job ID.
+- Every Clothes, Background Removal, Fabric VTO, and Image-to-Video task is reserved atomically before the external API call. Identical concurrent requests reuse one opaque job ID; only the transaction that claims the reservation may create the provider task.
 - Vendor POSTs are never automatically retried. Safe polling GETs have bounded retry/backoff.
-- Render attempts have per-owner limits, a global circuit breaker, leases, cooldowns, and a three-attempt maximum. Every admitted Clothes VTO V3 attempt atomically reserves exactly two units; the 900-unit breaker therefore permits at most 450 vendor POSTs.
+- Clothes attempts have per-owner limits, leases, cooldowns, and a three-attempt maximum. Optional evidence jobs have a two-attempt ceiling. All features share one global circuit breaker and exact costs: Background Removal 1 unit, Clothes VTO V3 2, Fabric VTO 2, and fixed five-second 480p motion 5. An anonymous workspace cannot consume more than 12 YouCam units in its lifetime.
 
 ## Deployment requirements
 
-1. Apply bootstrap 001 and every SQL migration through 022 in the exact order in `supabase/README.md`; 022 is the final readiness sentinel.
+1. Apply bootstrap 001 and every SQL migration through 024 in the exact order in `supabase/README.md`; 024 is the final readiness sentinel.
 2. Configure `APP_URL` as the exact HTTPS production origin.
 3. Store all secrets only in the deployment platform and `.env.local`; never use `NEXT_PUBLIC_` for secrets.
 4. Configure the maintenance secret, result-host allowlist, monitored privacy contact, and scheduled cleanup route.

@@ -61,6 +61,8 @@ Decision: **PASS, 3 of 3.** The required threshold was at least 2 of 3, so arbit
 | Background Removal | Not queried | - | Not used |
 | Fabric VTO | Not queried | - | Not used |
 
+> Historical scope note: this table records the Day 1 Clothes-VTO kill-gate decision. On August 14, the production evidence-chain extension queried the official authenticated feature-cost catalog and bounded three additional apparel-relevant operations: Background Removal at 1 unit per result, Fabric VTO at 2 units per result, and Image-to-Video 480p at 1 unit per second. PatternProof fixes motion at five seconds, so that operation is charged 5 internal units. These additions do not change the Day 1 Clothes result; their hosted acceptance is recorded separately rather than backfilled into the original experiment.
+
 Evidence: on 2026-08-03, the authenticated read-only GET /s2s/v2.0/credit/feature-cost endpoint was paged to the Clothes entries. It returned amount 2, proc_unit 1, unit result_image for both V2 and V3. The official description states that failed engine tasks do not consume units.
 
 Decision: **PASS.** The provider reports 2 units per successful V3 result. PatternProof conservatively reserves 2 internal units per admitted attempt. Its 900-unit default is a circuit-breaker ceiling, not a balance guarantee: validation calls occurred outside the ledger, so release requires reconciling the live provider balance and lowering `render_budget.max_units` enough to preserve the desired judging reserve.

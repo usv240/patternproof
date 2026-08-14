@@ -60,6 +60,11 @@ type SharedPayload = {
     created_at: string;
     reference_sha256: string;
     render_sha256: string;
+    evidence?: {
+      background_rescued: boolean;
+      fabric_template_id: string | null;
+      fabric_template_title: string | null;
+    };
     locked: boolean;
     referenceUrl: string | null;
     renderUrl: string | null;
@@ -463,6 +468,9 @@ export default function CustomerReview({
                 {shortImageProof(revision.reference_sha256)}
               </code>
             </small>
+            {revision.evidence?.background_rescued ? (
+              <span className="evidence-origin">YouCam background rescue applied before preview</span>
+            ) : null}
           </figure>
 
           <figure className="primary-preview">
@@ -511,6 +519,11 @@ export default function CustomerReview({
               Preview proof{" "}
               <code title={revision.render_sha256}>{shortImageProof(revision.render_sha256)}</code>
             </small>
+            {revision.evidence?.fabric_template_title ? (
+              <span className="evidence-origin">
+                YouCam predefined fabric direction: {revision.evidence.fabric_template_title}
+              </span>
+            ) : null}
           </figure>
 
           <p className="preview-disclaimer">

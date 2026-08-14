@@ -26,8 +26,8 @@ begin
   from public.patternproof_release release
   where release.singleton = true;
 
-  if release_migration is distinct from 20 then
-    raise exception 'release sentinel mismatch: expected 20, found %',
+  if release_migration is distinct from 24 then
+    raise exception 'release sentinel mismatch: expected 24, found %',
       coalesce(release_migration::text, 'missing')
       using errcode = '55000';
   end if;
@@ -48,10 +48,10 @@ begin
       coalesce(bucket_limit::text, 'null')
       using errcode = '55000';
   end if;
-  if cardinality(bucket_mime_types) is distinct from 2
-    or not bucket_mime_types @> array['image/jpeg', 'image/png']::text[]
-    or not bucket_mime_types <@ array['image/jpeg', 'image/png']::text[] then
-    raise exception 'brief-images MIME allowlist must be exactly JPEG and PNG, found %',
+  if cardinality(bucket_mime_types) is distinct from 3
+    or not bucket_mime_types @> array['image/jpeg', 'image/png', 'video/mp4']::text[]
+    or not bucket_mime_types <@ array['image/jpeg', 'image/png', 'video/mp4']::text[] then
+    raise exception 'brief-images MIME allowlist must be exactly JPEG, PNG, and MP4, found %',
       coalesce(bucket_mime_types::text, 'null')
       using errcode = '55000';
   end if;
@@ -145,7 +145,9 @@ declare
     'review_revision_clone',
     'review_session',
     'revision',
-    'shop'
+    'shop',
+    'youcam_evidence_job',
+    'youcam_evidence_usage'
   ];
   authenticated_select_tables constant text[] := array[
     'shop',
@@ -158,7 +160,8 @@ declare
     'customer_change_request',
     'render_job',
     'review_session',
-    'body_photo_erasure'
+    'body_photo_erasure',
+    'youcam_evidence_job'
   ];
   service_select_tables constant text[] := array[
     'shop',
@@ -173,9 +176,13 @@ declare
     'review_session',
     'render_job',
     'intake_issuance',
-    'patternproof_release'
+    'patternproof_release',
+    'youcam_evidence_job',
+    'youcam_evidence_usage'
   ];
   service_execute_routines constant oid[] := array[
+    'public.abort_youcam_evidence_attempt(uuid,integer,text)'::regprocedure,
+    'public.attach_youcam_evidence_task(uuid,integer,text)'::regprocedure,
     'public.abort_reserved_render_attempt(uuid,integer)'::regprocedure,
     'public.abort_review_revision_clone(uuid,text)'::regprocedure,
     'public.activate_intake_issuance(uuid)'::regprocedure,
@@ -193,11 +200,14 @@ declare
     'public.complete_body_photo_erasure(uuid,uuid,boolean,text)'::regprocedure,
     'public.complete_intake_cleanup(uuid,uuid,boolean,text)'::regprocedure,
     'public.complete_review_revision_clone_cleanup(uuid,uuid,boolean,text)'::regprocedure,
+    'public.complete_youcam_evidence_job(uuid,integer,text,text)'::regprocedure,
+    'public.consume_youcam_evidence_budget(uuid,integer)'::regprocedure,
     'public.consume_render_budget(uuid,integer)'::regprocedure,
     'public.create_intake_reservation(uuid,uuid,uuid,uuid,uuid,uuid,text,text,text,timestamptz)'::regprocedure,
     'public.discard_incomplete_intake_draft(uuid,uuid)'::regprocedure,
     'public.reconcile_claimed_intake_cleanup(uuid,uuid)'::regprocedure,
     'public.release_intake_finalization(uuid,uuid,text,boolean)'::regprocedure,
+    'public.reserve_youcam_evidence_job(uuid,text,text,text,text,uuid)'::regprocedure,
     'public.reserve_render_job(uuid,text,text,text,uuid)'::regprocedure,
     'public.reserve_review_revision_clone(uuid,uuid,text)'::regprocedure,
     'public.request_shared_revision_change(text,uuid,text,text)'::regprocedure,

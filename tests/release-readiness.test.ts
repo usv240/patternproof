@@ -38,7 +38,7 @@ test("release image bucket must remain private and exactly constrained", () => {
   const ready = {
     public: false,
     file_size_limit: EXPECTED_BUCKET_BYTES,
-    allowed_mime_types: ["image/png", "image/jpeg"],
+    allowed_mime_types: ["video/mp4", "image/png", "image/jpeg"],
   };
   assert.equal(hasExpectedPrivateImageBucket(ready), true);
   assert.equal(hasExpectedPrivateImageBucket({ ...ready, public: true }), false);
@@ -53,7 +53,7 @@ test("release image bucket must remain private and exactly constrained", () => {
   assert.equal(
     hasExpectedPrivateImageBucket({
       ...ready,
-      allowed_mime_types: ["image/jpeg", "image/png", "image/webp"],
+      allowed_mime_types: ["image/jpeg", "image/png", "video/mp4", "image/webp"],
     }),
     false,
   );

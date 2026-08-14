@@ -1,7 +1,11 @@
 const HOSTNAME = /^(?:\*\.)?(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const EXPECTED_BUCKET_BYTES = 10 * 1024 * 1024;
-export const EXPECTED_BUCKET_MIMES = ["image/jpeg", "image/png"] as const;
+export const EXPECTED_BUCKET_MIMES = [
+  "image/jpeg",
+  "image/png",
+  "video/mp4",
+] as const;
 
 type ImageBucketConfiguration = {
   public?: unknown;

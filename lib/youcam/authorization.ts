@@ -1,4 +1,4 @@
-﻿import "server-only";
+import "server-only";
 
 import {
   createSupabaseAdminClient,
@@ -47,7 +47,7 @@ export async function prepareAuthorizedRender(revisionId: string) {
 
   const { data: revision, error: revisionError } = await supabase
     .from("revision")
-    .select("id, brief_id, body_path, reference_path, locked_at, garment_spec")
+    .select("id, brief_id, body_path, reference_path, reference_rescued_path, reference_rescued_hash, locked_at, garment_spec")
     .eq("id", revisionId)
     .maybeSingle();
   if (revisionError) throw revisionError;
@@ -84,14 +84,19 @@ export async function prepareAuthorizedRender(revisionId: string) {
   }
 
   const bodySha256 = canonicalHash(revision.garment_spec, "body");
-  const referenceSha256 = canonicalHash(revision.garment_spec, "reference");
+  const referenceSha256 = typeof revision.reference_rescued_hash === "string"
+    ? revision.reference_rescued_hash
+    : canonicalHash(revision.garment_spec, "reference");
+  const referencePath = typeof revision.reference_rescued_path === "string"
+    ? revision.reference_rescued_path
+    : revision.reference_path;
 
   return {
     supabase,
     userId: userData.user.id,
     revisionId: String(revision.id),
     bodyPath: String(revision.body_path),
-    referencePath: String(revision.reference_path),
+    referencePath: String(referencePath),
     normalizedImageHash: normalizedImagePairHash(bodySha256, referenceSha256),
   };
 }

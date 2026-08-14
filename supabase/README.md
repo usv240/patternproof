@@ -2,13 +2,13 @@
 
 Apply this release only to a new, empty Supabase project. The three bootstrap files together are migration 001. Run every later file once in ascending order; they are additive and are not alternatives to the bootstrap.
 
-The canonical, deployable history is `supabase/migrations/`. Apply every timestamped file once in filename order. The first three files form release migration 001; all later files are additive. `20260814000100_draft_discard_consent_cascade.sql` is the final sentinel migration.
+The canonical, deployable history is `supabase/migrations/`. Apply every timestamped file once in filename order. The first three files form release migration 001; all later files are additive. `20260814000300_effective_reference_render_key.sql` is the final sentinel migration.
 
-Do not skip 012 or 014: both are part of the ordered release history even though later migrations advance the readiness sentinel. Do not reorder, partially rerun, or paste these files into an unknown legacy schema. Migrations 015 through 022 are each safe to rerun at their own completed sentinel; 015's legacy-budget correction is fenced to sentinel 14 and therefore runs exactly once. PostgreSQL rollback is not automatic; restore a tested backup or ship a reviewed forward migration. When upgrading an active deployment, pause render admissions and workers until 015 commits so an already-open transaction cannot resume the retired one-unit function body; this does not apply to a fresh empty project. Apply 016 through 022 as complete transactions before deploying code that expects sentinel 22, and keep traffic disabled until the live Auth/RLS/Storage verification passes.
+Do not skip 012 or 014: both are part of the ordered release history even though later migrations advance the readiness sentinel. Do not reorder, partially rerun, or paste these files into an unknown legacy schema. Migrations 015 through 024 are each safe to rerun at their own completed sentinel; 015's legacy-budget correction is fenced to sentinel 14 and therefore runs exactly once. PostgreSQL rollback is not automatic; restore a tested backup or ship a reviewed forward migration. When upgrading an active deployment, pause render admissions and workers until 015 commits so an already-open transaction cannot resume the retired one-unit function body; this does not apply to a fresh empty project. Apply 016 through 024 as complete transactions before deploying code that expects sentinel 24, and keep traffic disabled until the live Auth/RLS/Storage verification passes.
 
 ## Project configuration
 
-- Keep the `brief-images` bucket private. `migrations/20260812000300_storage.sql` sets a 10 MB object limit and allows only `image/jpeg` and `image/png`.
+- Keep the `brief-images` bucket private. `migrations/20260812000300_storage.sql` sets a 10 MB object limit and allows only `image/jpeg`, `image/png`, and `video/mp4` after migration 023. MP4 is restricted to post-approval presentation proof and never enters the frozen construction checksum.
 - Set Supabase Auth Site URL to the exact production `APP_URL`.
 - Add `APP_URL/auth/callback` to the Auth redirect allowlist.
 - Enable anonymous sign-ins for the zero-login judge path. Keep Supabase Auth attack protection, deployment monitoring, and provider abuse controls enabled; migration 021 enforces a two-attempt lifetime YouCam ceiling for anonymous users. Add CAPTCHA only when the client supplies and verifies its provider token end to end.
@@ -17,7 +17,7 @@ Do not skip 012 or 014: both are part of the ordered release history even though
 
 ## Readiness sentinel
 
-After all files commit, this must return exactly one row with migration `22`:
+After all files commit, this must return exactly one row with migration `24`:
 
 ```sql
 select migration, installed_at
@@ -27,7 +27,7 @@ where singleton = true;
 
 `GET /api/health` checks this row through the service role and also checks the private bucket. A missing/outdated sentinel must keep traffic in a not-ready state.
 
-The default budget is 900 units and Clothes VTO V3 consumes two units per admitted attempt, so the database hard ceiling is 450 vendor POSTs. Every `render_usage.units_consumed` value must be exactly `2`; an exact replay of the same job attempt is idempotent and consumes nothing further.
+The default global budget is 900 units. Exact admitted-attempt costs are Background Removal 1, Clothes VTO V3 2, Fabric VTO 2, and fixed five-second 480p Image-to-Video 5. A full four-feature chain is 10 units; anonymous owners have a separate 12-unit lifetime ceiling. `render_usage.units_consumed` remains exactly 2 for Clothes; `youcam_evidence_usage.units_consumed` is exactly 1, 2, or 5 according to feature. Exact replay is idempotent and consumes nothing further.
 
 After 013b, the unsafe legacy withdrawal path must be unavailable:
 
@@ -50,7 +50,7 @@ Use two real Auth users plus a separate unauthenticated client. Record the proje
 - A reviewed revision rejects row, child-row, consent, render, and object mutation.
 - A token cannot approve a different revision, changed snapshot, expired/withdrawn review, or second approval.
 - Simultaneous approval requests produce one approval and one immutable approved pointer.
-- Simultaneous render requests produce one budget usage row with `units_consumed = 2`, increment the singleton budget by exactly two units, and create at most one vendor POST reservation.
+- Simultaneous Clothes or optional-evidence requests produce one exact-cost usage row, increment the singleton budget once, and allow only the claiming transaction to create a provider task.
 - Simultaneous intake finalization requests preserve one ready brief and delete both temporary originals.
 - An interrupted intake cleanup retains its exact object manifest and succeeds on retry.
 - Review withdrawal creates only a fenced version+1 clone, preserves the prior review session, and never exposes a half-copied revision.

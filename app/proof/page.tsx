@@ -75,6 +75,21 @@ export default function ProofPage() {
         </article>
       </section>
 
+      <section className="integrity-rule sponsor-chain" aria-labelledby="sponsor-chain-heading">
+        <p className="eyebrow">Apparel evidence chain</p>
+        <h2 id="sponsor-chain-heading">Four YouCam jobs. Four controlled moments.</h2>
+        <ol>
+          <li><strong>Background Removal</strong><small>Reference rescue before preview · 1 unit</small></li>
+          <li><strong>Clothes VTO V3</strong><small>Core body-specific visual · 2 units</small></li>
+          <li><strong>Fabric VTO</strong><small>Predefined direction before human review · 2 units</small></li>
+          <li><strong>Image-to-Video V2</strong><small>Five-second proof after approval · 5 units</small></li>
+        </ol>
+        <p className="sponsor-chain-boundary">
+          Fabric is not an uploaded swatch or drape simulation. Motion is presentation-only and
+          never changes the frozen construction checksum. One database circuit breaker and a
+          12-unit guest ceiling bound the complete 10-unit chain.
+        </p>
+      </section>
       <ExpectationChecksum
         checksum={expectationChecksum}
         proof={PUBLIC_DEMO_SNAPSHOT_SHA256.slice(0, 18)}

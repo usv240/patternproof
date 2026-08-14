@@ -47,6 +47,11 @@ export type FrozenReviewSnapshot = {
     render_sha256: string;
     category: string;
     created_at: string;
+    evidence: {
+      background_rescued: boolean;
+      fabric_template_id: string | null;
+      fabric_template_title: string | null;
+    };
   };
   requirements: FrozenRequirement[];
   annotations: FrozenAnnotation[];
@@ -147,6 +152,7 @@ export function parseFrozenReviewSnapshot(
   const brief = record(source?.brief);
   const revision = record(source?.revision);
   const consent = record(source?.consent);
+  const evidence = record(revision?.evidence);
 
   if (source?.schema_version !== "patternproof-review-v2") return undefined;
   if (shop?.id !== identity.shopId || brief?.id !== identity.briefId) return undefined;
@@ -158,6 +164,14 @@ export function parseFrozenReviewSnapshot(
     return undefined;
   }
   if (!nonblank(revision.category) || !nonblank(revision.created_at)) return undefined;
+  const backgroundRescued = evidence?.background_rescued ?? false;
+  const fabricTemplateId = evidence?.fabric_template_id ?? null;
+  const fabricTemplateTitle = evidence?.fabric_template_title ?? null;
+  if (
+    typeof backgroundRescued !== "boolean" ||
+    nullableText(fabricTemplateId) === undefined ||
+    nullableText(fabricTemplateTitle) === undefined
+  ) return undefined;
   if (!Array.isArray(source.requirements) || !Array.isArray(source.annotations)) return undefined;
   if (
     !consent ||
@@ -187,6 +201,11 @@ export function parseFrozenReviewSnapshot(
       render_sha256: revision.render_sha256,
       category: revision.category,
       created_at: revision.created_at,
+      evidence: {
+        background_rescued: backgroundRescued,
+        fabric_template_id: fabricTemplateId as string | null,
+        fabric_template_title: fabricTemplateTitle as string | null,
+      },
     },
     requirements: requirements as FrozenRequirement[],
     annotations: annotations as FrozenAnnotation[],

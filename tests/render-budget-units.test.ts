@@ -1,4 +1,4 @@
-﻿import assert from "node:assert/strict";
+import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -87,6 +87,6 @@ test("exact spent attempts are idempotent and new attempts charge two atomically
 test("health readiness requires the latest release sentinel", () => {
   const health = source("app/api/health/route.ts");
 
-  assert.match(health, /\.eq\("migration", 22\)/);
+  assert.match(health, /\.eq\("migration", 24\)/);
   assert.doesNotMatch(health, /\.eq\("migration", 20\)/);
 });

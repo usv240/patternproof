@@ -21,3 +21,13 @@ export function isCanonicalRevisionAssetPath(
   if (kind === "reference") return path === `${prefix}/reference.jpg`;
   return new RegExp(`^${prefix}/render-[0-9a-f]{64}\\.jpg$`).test(path);
 }
+
+
+export function isCanonicalFrozenReferencePath(path: string, prefix: string): boolean {
+  return path === `${prefix}/reference.jpg`
+    || new RegExp(`^${prefix}/reference-clean-[0-9a-f]{64}\\.jpg$`).test(path);
+}
+
+export function isCanonicalFrozenRenderPath(path: string, prefix: string): boolean {
+  return new RegExp(`^${prefix}/(?:render|fabric)-[0-9a-f]{64}\\.jpg$`).test(path);
+}

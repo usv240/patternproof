@@ -99,7 +99,7 @@ export async function GET(
 
     const revisionQuery = supabase
       .from("revision")
-      .select("id, version, locked_at, garment_spec, body_path, reference_path, render_path")
+      .select("id, version, locked_at, garment_spec, body_path, reference_path, reference_rescued_path, reference_rescued_hash, render_path, render_hash, fabric_render_path, fabric_render_hash, fabric_template_id, fabric_template_title")
       .eq("brief_id", briefId);
     const sharedRevisionId = typeof briefResult.data.shared_revision_id === "string"
       ? briefResult.data.shared_revision_id
@@ -128,7 +128,7 @@ export async function GET(
     }
 
     const revision = revisionResult.data;
-    const [requirementResult, annotationResult, erasureResult, changeRequestResult] = await Promise.all([
+    const [requirementResult, annotationResult, erasureResult, changeRequestResult, motionResult] = await Promise.all([
       supabase
         .from("requirement")
         .select("id, label, note, feasibility(status, tailor_note)")
@@ -150,6 +150,15 @@ export async function GET(
         .eq("brief_id", briefId)
         .order("created_at", { ascending: false })
         .limit(20),
+      supabase
+        .from("youcam_evidence_job")
+        .select("result_path, result_hash")
+        .eq("revision_id", revision.id)
+        .eq("feature", "approved_motion")
+        .eq("status", "success")
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
     if (requirementResult.error) throw requirementResult.error;
     if (annotationResult.error) throw annotationResult.error;
@@ -157,16 +166,30 @@ export async function GET(
     if (changeRequestResult.error) throw changeRequestResult.error;
 
     const bodyPath = typeof revision.body_path === "string" ? revision.body_path : null;
-    const referencePath = typeof revision.reference_path === "string"
+    const originalReferencePath = typeof revision.reference_path === "string"
       ? revision.reference_path
       : null;
-    if (!bodyPath || !referencePath) throw new Error("Revision image paths missing");
-    const renderPath = typeof revision.render_path === "string" ? revision.render_path : null;
+    const rescuedReferencePath = typeof revision.reference_rescued_path === "string"
+      ? revision.reference_rescued_path
+      : null;
+    const referencePath = rescuedReferencePath ?? originalReferencePath;
+    if (!bodyPath || !referencePath || !originalReferencePath) throw new Error("Revision image paths missing");
+    const baseRenderPath = typeof revision.render_path === "string" ? revision.render_path : null;
+    const fabricRenderPath = typeof revision.fabric_render_path === "string"
+      ? revision.fabric_render_path
+      : null;
+    const renderPath = fabricRenderPath ?? baseRenderPath;
+    const motionPath = typeof motionResult.data?.result_path === "string"
+      ? motionResult.data.result_path
+      : null;
     const bodyErasure = erasureResult.data;
-    const [bodyUrl, referenceUrl, renderUrl] = await Promise.all([
+    const [bodyUrl, originalReferenceUrl, referenceUrl, baseRenderUrl, renderUrl, motionUrl] = await Promise.all([
       bodyErasure ? Promise.resolve(null) : signedUrl(supabase, bodyPath),
+      signedUrl(supabase, originalReferencePath),
       signedUrl(supabase, referencePath),
+      signedUrl(supabase, baseRenderPath),
       signedUrl(supabase, renderPath),
+      signedUrl(supabase, motionPath),
     ]);
 
     return NextResponse.json(
@@ -184,7 +207,15 @@ export async function GET(
               ? bodyErasure.completed_at
               : null,
           referenceUrl,
+          originalReferenceUrl,
+          referenceRescued: Boolean(rescuedReferencePath),
+          baseRenderUrl,
           renderUrl,
+          fabricDirection: fabricRenderPath ? {
+            templateId: String(revision.fabric_template_id),
+            templateTitle: String(revision.fabric_template_title),
+          } : null,
+          motionUrl,
           annotations: (annotationResult.data ?? []).map((annotation) => ({
             id: String(annotation.id),
             requirementId:

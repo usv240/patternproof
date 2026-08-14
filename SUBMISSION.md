@@ -1,4 +1,4 @@
-# PatternProof ? submission
+# PatternProof — submission
 
 > Most AI try-on helps one person decide what to buy. PatternProof helps two people agree on what to make — before fabric becomes irreversible.
 
@@ -27,18 +27,19 @@ PatternProof does not claim to predict physical fit or eliminate remakes. It cre
 1. A visitor creates an isolated private guest workspace with one click; no email or password is required.
 2. The customer body photo and rights-cleared garment reference are normalized, metadata-stripped, hashed, and stored privately.
 3. Category-specific capture checks reject images that are too small, dark, or poorly framed before a billable API call.
-4. YouCam Clothes Virtual Try-On V3 generates a visual-intent preview from the customer and garment images.
-5. The tailor marks every non-negotiable as “Can make as shown,” “Can make with adjustment,” or “Not feasible.” Adjustments require a customer-visible note; a not-feasible item blocks approval.
-6. The tailor turns the YouCam result into an Agreement Map: every coordinate-specific pin is linked to one non-negotiable and inherits its green, amber, or blocked decision state.
-7. A shared Cut Readiness Passport exposes six conditions—rights, preview, human decisions, feasibility, frozen snapshot, and customer approval—so “ready to cut” is an explicit protocol rather than a visual impression.
-8. Starting customer review freezes the exact preview, reference proof, requirements, decisions, spatial annotations, consent evidence, shop, and revision digest into an Expectation Checksum.
-9. The customer must acknowledge each customer-visible tailor adjustment before approval. The server independently derives the required adjustment IDs from the frozen snapshot and demands an exact match; a blind or bypassed checkbox cannot turn the customer key.
-10. The customer can instead submit a snapshot-bound veto. That request races safely with approval, blocks cutting at the database boundary, and becomes a verified version+1 in Revision Replay rather than silently editing history.
-11. After approval, the original body photo can be erased while the agreement evidence remains. The review link can be handed off through WhatsApp, reflecting the real conversational channel without exposing the credential to an external sharing service.
+4. YouCam Clothes Virtual Try-On V3 generates the core body-specific visual-intent preview. When a reference needs rescue, YouCam Background Removal may run first. After the core preview and before human review, the tailor may choose one YouCam-defined Fabric VTO direction; it is explicitly not an uploaded swatch or drape simulation.
+5. After approval, YouCam Image-to-Video V2 can create a fixed five-second 480p presentation proof. Motion is excluded from the frozen construction checksum and cannot change an approved Cut Card.
+6. The tailor marks every non-negotiable as “Can make as shown,” “Can make with adjustment,” or “Not feasible.” Adjustments require a customer-visible note; a not-feasible item blocks approval.
+7. The tailor turns the YouCam result into an Agreement Map: every coordinate-specific pin is linked to one non-negotiable and inherits its green, amber, or blocked decision state.
+8. A shared Cut Readiness Passport exposes six conditions—rights, preview, human decisions, feasibility, frozen snapshot, and customer approval—so “ready to cut” is an explicit protocol rather than a visual impression.
+9. Starting customer review freezes the exact preview, reference proof, requirements, decisions, spatial annotations, consent evidence, shop, and revision digest into an Expectation Checksum.
+10. The customer must acknowledge each customer-visible tailor adjustment before approval. The server independently derives the required adjustment IDs from the frozen snapshot and demands an exact match; a blind or bypassed checkbox cannot turn the customer key.
+11. The customer can instead submit a snapshot-bound veto. That request races safely with approval, blocks cutting at the database boundary, and becomes a verified version+1 in Revision Replay rather than silently editing history.
+12. After approval, the original body photo can be erased while the agreement evidence remains. The review link can be handed off through WhatsApp, reflecting the real conversational channel without exposing the credential to an external sharing service.
 
 ## Why YouCam is essential
 
-YouCam Clothes Virtual Try-On is not a decorative API call. Within PatternProof, it turns another garment reference into the body-specific visual around which the customer and tailor make explicit production decisions. PatternProof adds the workflow the model cannot provide by itself: input quality control, private storage, content-addressed idempotency, human feasibility, frozen review evidence, versioning, approval, and erasure.
+YouCam Clothes Virtual Try-On V3 is the indispensable visual engine: it turns another garment reference into the body-specific evidence around which the customer and tailor make explicit production decisions. Three apparel-relevant YouCam capabilities reinforce distinct lifecycle boundaries instead of inflating a feature count: Background Removal rescues a noisy reference before preview; Fabric VTO offers an optional provider-defined visual direction before human feasibility; and Image-to-Video V2 communicates an approved look after the agreement is locked. PatternProof adds the workflow the models cannot provide by themselves: input quality control, consent, private storage, exact-cost idempotency, human feasibility, frozen review evidence, versioning, approval, and erasure.
 
 Live validation used project-authorized synthetic fixtures:
 
@@ -54,7 +55,7 @@ In our visual review of these three synthetic cases, all three produced recogniz
 - Supabase Auth, PostgreSQL, row-level security, private Storage, and transactional RPCs.
 - Server-only YouCam bearer credential and exact result-host allowlist.
 - Canonical image normalization, EXIF removal, pixel/byte limits, SHA-256 evidence, and ownership-bound storage paths.
-- Durable render reservations, leases, per-owner throttling, a conservative two-unit budget per admitted attempt, and a global circuit breaker.
+- Durable provider-task reservations, leases, per-owner throttling, exact costs of 1/2/2/5 units for Background Removal/Clothes/Fabric/Motion, a 12-unit guest ceiling, and one global circuit breaker.
 - Digest-bound 256-bit customer links with 14-day expiry, revocation, and single-revision approval.
 - Fenced cleanup workers for abandoned intake, revision-clone recovery, and body-photo erasure.
 - No YouCam or Supabase service credential enters browser code. A public evidence ledger makes the bounded transfer tests, private signed-URL path, and observed byte-identical repeat visible without exposing customer or operational data.
@@ -77,7 +78,8 @@ This is not a fitting room, measurement system, tailor POS, marketplace, or fit 
 ## Privacy and limitations
 
 - The preview communicates visual intent only. It is not a guarantee of measurements, physical fit, construction, fabric drape, or final appearance.
-- PatternProof makes no arbitrary fabric-swatch claim.
+- Fabric VTO uses only current provider-defined visual directions. PatternProof makes no uploaded-swatch, physical fabric, colorimetry, or drape claim.
+- Post-approval motion is presentation-only and excluded from the frozen construction checksum.
 - Customer reviews use unguessable, expiring bearer links rather than public galleries; possession of a link grants review access.
 - The demo fixtures are synthetic and contain no real customer data.
 - No real-tailor outcome study has been completed; impact outcomes remain pilot hypotheses.

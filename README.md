@@ -6,7 +6,7 @@ The central product promise is narrow: the shop and customer approve the same fr
 
 ## Release status
 
-The repository contains the complete private intake, normalization, rendering, feasibility, frozen review, approval, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). The final hosted acceptance evidence is recorded in [RELEASE-ACCEPTANCE.md](RELEASE-ACCEPTANCE.md).
+The repository contains the complete private intake, normalization, rendering, optional YouCam evidence chain, feasibility, frozen review, approval, post-approval motion proof, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). The final hosted acceptance evidence is recorded in [RELEASE-ACCEPTANCE.md](RELEASE-ACCEPTANCE.md).
 
 Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects poor live input before provider spend; T5 confirms two units per successful Clothes VTO V3 result; live signed-URL T6 passed; controlled repeated-input T7 produced byte-identical output; the exposed credential was rotated; and the zero-account production journey passed from consent-bound intake through private V3 generation, human feasibility, frozen customer review, approval, immutable owner readback, and explicit draft cleanup on August 14, 2026. This is production acceptance evidence, not a claim of measured customer outcomes; prospective impact validation remains governed by [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md).
 
@@ -16,18 +16,19 @@ Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manu
 
 1. A visitor opens an isolated Supabase anonymous session with one click. No email or password is required; an optional magic link can still identify a returning pilot owner.
 2. The browser receives single-purpose private upload grants. The server validates each JPG/PNG, limits pixels and bytes, rotates orientation, converts to sRGB JPEG, strips embedded metadata, and records SHA-256 digests.
-3. A server-only YouCam request uses short-lived signed input URLs. The returned image is allowlisted, downloaded, validated, normalized, and stored in the private bucket.
-4. The tailor records each non-negotiable and an explicit feasibility decision. `not_feasible` blocks customer review; an adjustment requires a customer-visible note.
-5. Starting review freezes the exact customer-visible snapshot and its digest. A 256-bit bearer link is bound to that snapshot and expires after 14 days.
-6. If the tailor withdraws review, a fenced saga copies the exact private inputs to a new version, verifies their stored hashes, and atomically publishes the editable revision. Crashed/late copies stay on a retryable deletion manifest.
-7. Approval is one atomic database operation. It verifies the token and digest, locks the revision, records approval evidence, and consumes the token.
-8. After approval or archival, the shop can trigger audited body-photo erasure. The agreement snapshot and digest remain as integrity evidence.
+3. A server-only YouCam Clothes VTO V3 request uses short-lived signed input URLs. Before that core preview, a tailor may apply Background Removal as reference rescue; after it, a tailor may apply one provider-defined Fabric VTO direction before human review. Every returned asset is allowlisted, bounded, normalized where applicable, hashed, and re-hosted privately.
+4. After approval, Image-to-Video V2 can create a fixed five-second 480p presentation proof. It never enters the construction checksum and cannot alter the approved Cut Card.
+5. The tailor records each non-negotiable and an explicit feasibility decision. `not_feasible` blocks customer review; an adjustment requires a customer-visible note.
+6. Starting review freezes the exact customer-visible snapshot and its digest. A 256-bit bearer link is bound to that snapshot and expires after 14 days.
+7. If the tailor withdraws review, a fenced saga copies the exact private inputs to a new version, verifies their stored hashes, and atomically publishes the editable revision. Crashed/late copies stay on a retryable deletion manifest.
+8. Approval is one atomic database operation. It verifies the token and digest, locks the revision, records approval evidence, and consumes the token.
+9. After approval or archival, the shop can trigger audited body-photo erasure. The agreement snapshot and digest remain as integrity evidence.
 
 ## Architecture and trust boundaries
 
 - Next.js 15 App Router and React 19 provide the application and server routes.
 - Supabase provides isolated anonymous sessions, optional magic-link authentication, PostgreSQL, row-level security, RPC transactions, and the private `brief-images` bucket.
-- Perfect Corp YouCam Clothes VTO creates the visual-intent preview.
+- Perfect Corp YouCam Clothes VTO V3 creates the core body-specific visual. Optional Background Removal rescues a noisy reference, Fabric VTO supplies a provider-defined visual direction before human review, and Image-to-Video V2 creates post-approval motion proof without changing the frozen agreement.
 - Vercel hosts the reference deployment and invokes one authenticated daily maintenance job.
 - Browsers are untrusted. They never receive the YouCam key or Supabase service-role key.
 - Customer-review URLs are unguessable, expiring bearer links rather than public galleries; anyone possessing one can review it. Only SHA-256 token hashes are stored.
@@ -110,14 +111,16 @@ Use a new, empty Supabase project for the pilot. Apply each file once in the SQL
 | 020 | `supabase/migrations/20260813000100_customer_change_requests.sql` | Snapshot-bound customer veto, approval race guard, and traceable revision replay; health sentinel 20. |
 | 021 | `supabase/migrations/20260813000200_guest_render_ceiling.sql` | Zero-login isolated workspaces, exact retry idempotency, and a two-attempt lifetime YouCam ceiling for anonymous users. |
 | 022 | `supabase/migrations/20260814000100_draft_discard_consent_cascade.sql` | Forward fix for safe consent cascade and deterministic cleanup-manifest return during incomplete-draft discard. |
+| 023 | `supabase/migrations/20260814000200_youcam_evidence_chain.sql` | Optional Background Removal, predefined Fabric VTO direction, and approved Image-to-Video proof with exact unit accounting, idempotent reservations, private MP4 storage, and health sentinel 23. |
+| 024 | `supabase/migrations/20260814000300_effective_reference_render_key.sql` | Forward fix binding the Clothes VTO idempotency key to the verified Background Removal rescue hash while preserving original-reference provenance; health sentinel 24. |
 
 After applying SQL:
 
-1. Confirm `brief-images` is private, limited to 10 MB, and accepts only `image/jpeg` and `image/png`. Do not switch it public.
+1. Confirm `brief-images` is private, limited to 10 MB, and accepts only `image/jpeg`, `image/png`, and `video/mp4`. Do not switch it public.
 2. In Supabase Auth URL Configuration, set Site URL to `APP_URL` and add `APP_URL/auth/callback` to the redirect allowlist.
 3. Enable anonymous sign-ins for zero-login judging. Keep Supabase Auth attack protection, deployment monitoring, and provider abuse controls enabled; anonymous users are additionally fenced to two lifetime YouCam attempts in PostgreSQL. Add CAPTCHA only when the client supplies and verifies the provider token end to end. Configure email magic links only if returning pilot owners need durable cross-device access.
 4. Run the two-user isolation and service-function tests listed in [supabase/README.md](supabase/README.md). Never treat the service-role key as an RLS test client.
-5. Verify this query returns migration `22` before deployment:
+5. Verify this query returns migration `24` before deployment:
 
 ```sql
 select migration, installed_at
@@ -125,7 +128,7 @@ from public.patternproof_release
 where singleton = true;
 ```
 
-Do not reorder, partially rerun, or apply these files to an unknown legacy schema. Database rollback is not automatic; restore from a tested backup or apply a reviewed forward migration. On an upgrade with live render traffic, pause render admissions and workers until migration 015 commits so no transaction can resume the retired one-unit function body; a fresh empty deployment is unaffected. Apply 016 through 022 as complete transactions before deploying code that expects sentinel 22, and keep traffic disabled until the post-migration Auth/RLS/Storage checks pass.
+Do not reorder, partially rerun, or apply these files to an unknown legacy schema. Database rollback is not automatic; restore from a tested backup or apply a reviewed forward migration. On an upgrade with live render traffic, pause render admissions and workers until migration 015 commits so no transaction can resume the retired one-unit function body; a fresh empty deployment is unaffected. Apply 016 through 024 as complete transactions before deploying code that expects sentinel 24, and keep traffic disabled until the post-migration Auth/RLS/Storage checks pass.
 
 ## YouCam release configuration
 
@@ -133,7 +136,7 @@ Do not reorder, partially rerun, or apply these files to an unknown legacy schem
 2. Complete T3-T7 in [D1-RESULTS.md](D1-RESULTS.md). Record inputs, rights, timestamps, latency, unit cost, error behavior, signed-URL behavior, and resulting hostnames without recording temporary signed URLs or secrets.
 3. Keep the verified US result host `yce-us.s3-accelerate.amazonaws.com` in `YOUCAM_RESULT_HOSTS`. Add another exact official regional host only after observing it in a live result. Every HTTPS redirect is checked again; private/reserved IP addresses and unexpected ports are rejected.
 4. Put the fresh API key in `.env.local` and Vercel only. The current app uses bearer API-key authentication; it does not need a browser-visible secret.
-5. Reconcile the provider console balance after validation and before launch. Clothes VTO V3 costs two units per successful result, while the database conservatively reserves two units for every admitted vendor attempt. Its default 900-unit ceiling permits at most 450 vendor POSTs, but validation calls occurred outside this ledger: lower `render_budget.max_units` as needed so the current provider balance, not the original grant, retains the desired judging reserve.
+5. Reconcile the provider console balance after validation and before launch. The verified unit schedule is Background Removal 1, Clothes VTO V3 2, Fabric VTO 2, and the fixed five-second 480p Image-to-Video proof 5. The database charges those exact server-derived costs once per claimed attempt against one 900-unit circuit breaker; a full four-feature chain is 10 units, while a Clothes-only ceiling remains 450 admitted attempts. Anonymous workspaces have a separate 12-unit lifetime ceiling. Validation calls occurred outside this ledger, so lower `render_budget.max_units` as needed to preserve the judging reserve.
 
 ## Vercel deployment
 
@@ -142,7 +145,7 @@ Do not reorder, partially rerun, or apply these files to an unknown legacy schem
 3. Set `APP_URL` to the final custom HTTPS origin, update the Supabase Site URL/redirect allowlist, and redeploy.
 4. Deploy [vercel.json](vercel.json). It schedules `GET /api/maintenance/intake-cleanup` at `0 3 * * *` (once daily at approximately 03:00 UTC). This is compatible with Vercel Hobby's daily cron restriction.
 5. Vercel automatically sends `CRON_SECRET` as the bearer authorization header. Confirm the cron appears under Project Settings > Cron Jobs and inspect its first invocation log.
-6. Request `GET /api/health`. A ready release returns HTTP 200 with `{"status":"ok"}`. Missing configuration, the private bucket, or migration 022 returns HTTP 503.
+6. Request `GET /api/health`. A ready release returns HTTP 200 with `{"status":"ok"}`. Missing configuration, the private bucket, or migration 024 returns HTTP 503.
 
 Official references: [Vercel cron security and Hobby scheduling](https://vercel.com/docs/cron-jobs/manage-cron-jobs) and [Supabase private bucket behavior](https://supabase.com/docs/guides/storage/buckets/fundamentals).
 
@@ -188,7 +191,7 @@ Record evidence, time, environment, and operator for every item. Do not mark the
 - Anon/authenticated roles cannot execute service-only review, approval, render budget, maintenance, intake finalization, or erasure functions.
 - Cross-tenant object paths cannot produce signed URLs.
 - Simultaneous intake finalization yields one ready brief, exact canonical objects, and deleted temporary originals.
-- Simultaneous render requests create one usage row, reserve exactly two units, and create at most one vendor POST reservation.
+- Simultaneous Clothes or optional-evidence requests create one usage row, charge the exact feature cost once, and create at most one vendor POST reservation. The complete optional chain stays within the 12-unit guest ceiling.
 - Simultaneous approval requests produce one approval and one immutable approved pointer.
 - A changed, expired, withdrawn, consumed, or different-revision token cannot approve.
 
@@ -197,6 +200,7 @@ Record evidence, time, environment, and operator for every item. Do not mark the
 - Magic-link login succeeds at the final HTTPS origin and rejects an unlisted redirect/origin.
 - A rights-cleared JPG and PNG pass intake; oversize, malformed, decompression-bomb, and metadata-heavy files fail safely.
 - T3-T7 are complete and the result-host allowlist matches real provider redirects.
+- Background rescue is available only before preview/human review; a predefined Fabric VTO direction is available only after the Clothes result and before human review; fixed motion proof is available only after approval and remains outside the checksum.
 - Tailor feasibility blocks incomplete, adjusted-without-note, and not-feasible reviews.
 - The customer sees the exact frozen images, hashes, requirements, decisions, notes, consent summary, shop, and revision.
 - Approval remains readable after token consumption and creates a print-usable Cut Card.

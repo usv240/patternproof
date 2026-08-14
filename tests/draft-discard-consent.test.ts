@@ -24,5 +24,5 @@ test("migration 022 preserves consent immutability while allowing a fenced paren
 
 test("health requires the draft-discard consent-cascade fix", () => {
   const health = source("app/api/health/route.ts");
-  assert.match(health, /eq\("migration", 22\)/);
+  assert.match(health, /eq\("migration", 24\)/);
 });

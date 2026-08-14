@@ -10,7 +10,8 @@ import {
 } from "../../../../lib/review-snapshot";
 import { hashShareToken } from "../../../../lib/security/share-token";
 import {
-  isCanonicalRevisionAssetPath,
+  isCanonicalFrozenReferencePath,
+  isCanonicalFrozenRenderPath,
   revisionStoragePrefix,
 } from "../../../../lib/security/storage-path";
 import {
@@ -107,8 +108,8 @@ export async function GET(
     const renderPath = snapshot.revision.render_path;
     if (
       !prefix ||
-      !isCanonicalRevisionAssetPath(referencePath, prefix, "reference") ||
-      !isCanonicalRevisionAssetPath(renderPath, prefix, "render")
+      !isCanonicalFrozenReferencePath(referencePath, prefix) ||
+      !isCanonicalFrozenRenderPath(renderPath, prefix)
     ) {
       throw new Error("Shared revision asset path failed ownership checks.");
     }
@@ -146,6 +147,7 @@ export async function GET(
           created_at: snapshot.revision.created_at,
           reference_sha256: snapshot.revision.reference_sha256,
           render_sha256: snapshot.revision.render_sha256,
+          evidence: snapshot.revision.evidence,
           locked: brief.status === "approved",
           referenceUrl,
           renderUrl,

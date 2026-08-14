@@ -12,6 +12,7 @@ import CutReadinessPassport from "./CutReadinessPassport";
 import ExpectationChecksum from "./ExpectationChecksum";
 import RevisionReplay from "./RevisionReplay";
 import ShareActions from "./ShareActions";
+import YouCamEvidenceLab from "./YouCamEvidenceLab";
 
 type Status = "as_shown" | "with_adjustment" | "not_feasible";
 type Requirement = {
@@ -39,7 +40,12 @@ type WorkspacePayload = {
     bodyErasureStatus: string | null;
     bodyErasedAt: string | null;
     referenceUrl: string | null;
+    originalReferenceUrl: string | null;
+    referenceRescued: boolean;
+    baseRenderUrl: string | null;
     renderUrl: string | null;
+    fabricDirection: { templateId: string; templateTitle: string } | null;
+    motionUrl: string | null;
     annotations: Annotation[];
     requirements: Requirement[];
     changeRequests: Array<{
@@ -511,6 +517,8 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
   const inCustomerReview = workspace.brief.status === "awaiting_customer";
   const readOnly = approved || inCustomerReview;
   const openChangeRequest = revision.changeRequests.find((request) => request.state === "open");
+  const humanReviewStarted = revision.annotations.length > 0 ||
+    revision.requirements.some((requirement) => Boolean(requirement.status));
   const readiness = evaluateCutReadiness({
     rightsConfirmed: workspace.brief.rightsConfirmed,
     previewReady: Boolean(revision.renderUrl),
@@ -626,6 +634,16 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
               )}
             </figure>
           </div>
+          <YouCamEvidenceLab
+            revisionId={revision.id}
+            backgroundReady={revision.referenceRescued}
+            canRescueBackground={!readOnly && !revision.baseRenderUrl}
+            fabricDirection={revision.fabricDirection}
+            canApplyFabric={!readOnly && Boolean(revision.baseRenderUrl) && !revision.fabricDirection && !humanReviewStarted}
+            motionUrl={revision.motionUrl}
+            canCreateMotion={approved && !revision.motionUrl}
+            onComplete={() => load()}
+          />
           {revision.renderUrl && (
             <section className="workspace-annotations" aria-labelledby="workspace-annotations-heading">
               <div className="workspace-annotations-heading">
