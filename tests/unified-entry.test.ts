@@ -9,6 +9,7 @@ const legacyJudge = readFileSync(new URL("../app/judge/page.tsx", import.meta.ur
 const legacyDemo = readFileSync(new URL("../app/demo/page.tsx", import.meta.url), "utf8");
 const home = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const globalCss = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const icon = readFileSync(new URL("../app/icon.svg", import.meta.url), "utf8");
 
 test("the ready sample is a clearly labelled, no-write Cut Card journey", () => {
   assert.match(sample, /Sample Cut Card/);
@@ -61,4 +62,14 @@ test("the homepage release sequence stays inside one responsive content grid", (
   assert.match(globalCss, /\.steps\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.doesNotMatch(globalCss, /\.steps article\{[^}]*100vw/);
   assert.match(globalCss, /@media\(max-width:800px\)[^{]*\{[^}]*\.process-section/);
+});
+test("judge-facing entry copy and mobile navigation remain accessible", () => {
+  assert.match(home, /mean\{" "\}<br\/>/);
+  assert.match(home, /intent\.\{" "\}<br\/>/);
+  assert.doesNotMatch(home, /â/);
+  assert.match(sample, /className="judge-mobile-controls"/);
+  assert.match(globalCss, /\.judge-mobile-controls\{display:none\}/);
+  assert.match(globalCss, /\.sample-workspace \.judge-mobile-controls\{position:sticky/);
+  assert.match(globalCss, /\.sample-workspace \.judge-explainer>\.judge-controls\{display:none\}/);
+  assert.match(icon, /<svg[^>]+viewBox="0 0 64 64"/);
 });

@@ -31,17 +31,17 @@ export default async function Home() {
     </nav>
     <section className="hero">
       <p className="eyebrow">Before fabric becomes irreversible</p>
-      <h1>Make sure you both mean<br/><em>the same garment.</em></h1>
+      <h1>Make sure you both mean{" "}<br/><em>the same garment.</em></h1>
       <p className="lede">PatternProof is a three-key production interlock: AI evidence, craft judgment, and customer consent must agree before the cut.</p>
       <div className="actions"><Link className="button primary" href="/create">Create a Cut Card</Link><Link className="text-link" href="/proof">View technical proof</Link></div>
-      <p className="micro">A visual intent reference — not a fit, construction, or fabric-drape guarantee.</p>
+      <p className="micro">A visual intent reference &mdash; not a fit, construction, or fabric-drape guarantee.</p>
     </section>
     <section className="process-section" aria-labelledby="process-title">
       <div className="process-inner">
         <header className="process-heading">
           <div>
             <p className="eyebrow">The release sequence</p>
-            <h2 id="process-title">One shared intent.<br/>Three keys before the cut.</h2>
+            <h2 id="process-title">One shared intent.{" "}<br/>Three keys before the cut.</h2>
           </div>
           <p>PatternProof makes the handoff visible: first see the intended garment, then record what can actually be built, and only then ask the customer to release the approved Cut Card.</p>
         </header>

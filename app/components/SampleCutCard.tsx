@@ -102,6 +102,10 @@ export default function SampleCutCard() {
           </li>
         ))}
       </ol>
+      <div className="judge-mobile-controls" aria-label="Sample step controls">
+        <button type="button" className="button secondary" disabled={step === 0} onClick={() => selectStep(Math.max(0, step - 1))}>Back</button>
+        {step < journey.length - 1 ? <button type="button" className="button primary" onClick={() => selectStep(Math.min(journey.length - 1, step + 1))}>Next: {journey[step + 1][1]}</button> : <Link className="button primary" href="/s/demo-olive">Inspect immutable public record</Link>}
+      </div>
       <div className="judge-stage" ref={stageRef} tabIndex={-1}>
         <section className="judge-visual" aria-label="Visual evidence">
           <header>
