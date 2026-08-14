@@ -15,6 +15,18 @@
 
 No third-party images, logos, trademarks, music, or scraped visual assets are included. The synthetic fixtures and public demo contain no real customer data. The public render is the recorded T3 worn-reference result; its byte identity is pinned above so the displayed public proof cannot silently drift.
 
+## Submission screenshots
+
+Captured from the public production origin on 2026-08-14 at 1440 x 1100. These images show only public, synthetic, credential-free application states.
+
+| Asset | Screen | SHA-256 |
+|---|---|---|
+| `submission/screenshots/01-landing.png` | Product landing and primary judge path | `3a0309fa8b15d08424b5183df26a324430448b812a3f57223cfe9f76cb1d8afd` |
+| `submission/screenshots/02-unified-create.png` | Unified sample/private creation entry | `36dbd575cad4712b0243a9793d3345530784f87a04557d46957e88ed18205921` |
+| `submission/screenshots/03-privacy-boundary.png` | Privacy and image-handling contract | `4fb3a4937da34df84aa6e6add31636feca7833e47193c62cec4ac31bfdbf625a` |
+| `submission/screenshots/04-evidence-ledger.png` | Public technical evidence ledger | `c20599d2ce832015ae0324fd1c6de1616da09093d508f819c7028653be977193` |
+| `submission/screenshots/05-immutable-cut-card.png` | Immutable synthetic public Cut Card | `6e4f8937da5ae1de8aad0434c6ad6e46b0de4e29f1b502410a27cee2d9a0aeb9` |
+
 ## Generation prompt record
 
 - Clean body: fictional adult, centered head-to-toe on a warm-gray studio background, neutral pose, fitted charcoal T-shirt and dark leggings, even frontal light, no props/logos/text.
