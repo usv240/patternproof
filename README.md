@@ -4,11 +4,22 @@ PatternProof turns garment inspiration into a tailor-feasibility-checked, custom
 
 The central product promise is narrow: the shop and customer approve the same frozen visual and construction decisions before an irreversible cut. The AI preview is supporting evidence, never a fit or construction guarantee.
 
+## Judge it in 60 seconds
+
+1. Open the [live Create a Cut Card journey](https://patternproof-nu.vercel.app/create). No account, email, or credential is required.
+2. Advance the six visible stages: private intent, YouCam evidence, human veto, revision replay, consent to cut, and privacy exit.
+3. Use **Create with my photos** at any time to open a separate, tenant-isolated anonymous workspace for a live consent-bound intake.
+4. Inspect the [immutable public Cut Card](https://patternproof-nu.vercel.app/s/demo-olive) and [technical evidence ledger](https://patternproof-nu.vercel.app/proof).
+
+The sample is deterministic and read-only; the private-photo path creates a real isolated workspace and uses live provider jobs. The exact longer judge script is in [JUDGING.md](JUDGING.md).
+
 ## Release status
 
 The repository contains the complete private intake, normalization, rendering, optional YouCam evidence chain, feasibility, frozen review, approval, post-approval motion proof, and audited body-photo-erasure paths. The production deployment is [patternproof-nu.vercel.app](https://patternproof-nu.vercel.app). The final hosted acceptance evidence is recorded in [RELEASE-ACCEPTANCE.md](RELEASE-ACCEPTANCE.md).
 
 Current evidence: YouCam T0 and T2 passed; T3 passed 3/3; the application-side T4 quality gate rejects poor live input before provider spend; T5 confirms two units per successful Clothes VTO V3 result; live signed-URL T6 passed; controlled repeated-input T7 produced byte-identical output; the exposed credential was rotated; and the zero-account production journey passed from consent-bound intake through private V3 generation, human feasibility, frozen customer review, approval, immutable owner readback, and explicit draft cleanup on August 14, 2026. This is production acceptance evidence, not a claim of measured customer outcomes; prospective impact validation remains governed by [VALIDATION-PROTOCOL.md](VALIDATION-PROTOCOL.md).
+
+Final release verification: 150/150 automated tests, TypeScript, ESLint, the optimized 20-page Next.js build, HTTP health, and a real Chrome navigation audit all passed. The browser audit exercised the landing page, unified creation entry, all six sample stages, evidence ledger, immutable record, and privacy page at 1440 x 1000 and 390 x 844. It recorded zero console errors and zero horizontal overflow; every next/final action remained above the mobile fold.
 
 Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manually screened 1.0–2.0 public tailoring complaints across 41 de-identified businesses and three city samples. It is a purposive negative-review study—not a prevalence estimate, user validation, or proof of product impact—and it explicitly reports the failure categories PatternProof does not solve.
 
@@ -24,6 +35,26 @@ Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manu
 8. Approval is one atomic database operation. It verifies the token and digest, locks the revision, records approval evidence, and consumes the token.
 9. After approval or archival, the shop can trigger audited body-photo erasure. The agreement snapshot and digest remain as integrity evidence.
 
+```mermaid
+flowchart LR
+    A[Open Create a Cut Card] --> B{Choose a path}
+    B -->|Explore safely| C[Rights-cleared read-only sample]
+    B -->|Use my photos| D[Isolated anonymous workspace]
+    D --> E[Consent and private normalized uploads]
+    E --> F[Optional Background Removal rescue]
+    F --> G[Clothes VTO V3 visual evidence]
+    G --> H[Optional Fabric VTO direction]
+    H --> I{Tailor feasibility}
+    I -->|Not feasible| J[Cutting and sharing blocked]
+    I -->|Feasible| K[Frozen snapshot and SHA-256 proof]
+    K --> L{Customer decision}
+    L -->|Request change| M[Traceable next revision]
+    M --> I
+    L -->|Approve exact proof| N[Immutable approved Cut Card]
+    N --> O[Optional five-second motion proof]
+    N --> P[Audited body-photo erasure]
+```
+
 ## Architecture and trust boundaries
 
 - Next.js 15 App Router and React 19 provide the application and server routes.
@@ -32,6 +63,61 @@ Formative problem evidence is documented in [RESEARCH.md](RESEARCH.md): 108 manu
 - Vercel hosts the reference deployment and invokes one authenticated daily maintenance job.
 - Browsers are untrusted. They never receive the YouCam key or Supabase service-role key.
 - Customer-review URLs are unguessable, expiring bearer links rather than public galleries; anyone possessing one can review it. Only SHA-256 token hashes are stored.
+
+```mermaid
+flowchart TB
+    subgraph Client[Untrusted browser]
+        O[Owner or anonymous guest]
+        C[Customer bearer-link reviewer]
+    end
+
+    subgraph Vercel[Vercel trust boundary]
+        UI[Next.js App Router UI]
+        API[Server routes: auth, origin and size gates]
+        CRON[Authenticated daily maintenance]
+    end
+
+    subgraph Supabase[Supabase trust boundary]
+        AUTH[Anonymous or optional magic-link Auth]
+        DB[(PostgreSQL, RLS and fenced RPCs)]
+        STORE[(Private brief-images bucket)]
+    end
+
+    subgraph PerfectCorp[Perfect Corp server-to-server boundary]
+        BG[Background Removal]
+        VTO[Clothes VTO V3]
+        FAB[Fabric VTO]
+        VID[Image-to-Video V2]
+    end
+
+    O --> UI
+    C --> UI
+    UI --> API
+    O --> AUTH
+    API --> DB
+    API -->|single-purpose signed grants| STORE
+    API -->|short-lived signed inputs; server-only key| BG
+    API -->|short-lived signed inputs; server-only key| VTO
+    API -->|validated template; server-only key| FAB
+    API -->|approved image only; server-only key| VID
+    BG -->|bounded result| API
+    VTO -->|bounded result| API
+    FAB -->|bounded result| API
+    VID -->|bounded result| API
+    API -->|validate, hash and privately re-host| STORE
+    CRON --> API
+```
+
+### YouCam feature lifecycle
+
+| Feature | Product role | Cost | Integrity boundary |
+|---|---|---:|---|
+| Background Removal | Optional rescue for a noisy garment reference | 1 unit | Runs before core preview; original and rescued hashes retain distinct provenance. |
+| Clothes VTO V3 | Required body-specific visual-intent evidence | 2 units | The result is privately re-hosted and becomes the visual key in the frozen agreement. |
+| Fabric VTO | Optional provider-defined visual direction | 2 units | Runs before human review; never claims uploaded-swatch fidelity, colorimetry, or drape. |
+| Image-to-Video V2 | Optional fixed five-second post-approval presentation proof | 5 units | Runs only after approval and never enters or changes the construction checksum. |
+
+A complete four-feature chain is exactly 10 internally accounted units. Every provider call is server-side, idempotently admitted, bounded by a global circuit breaker, and never automatically retried after an ambiguous vendor POST.
 
 See [SECURITY.md](SECURITY.md) for the integrity model and incident response.
 
@@ -249,3 +335,6 @@ The user-facing notice is at `/privacy` and is linked from every page. It descri
 - `D1-RESULTS.md` — live YouCam validation record
 - `SECURITY.md` — security invariants and incident response
 - `ASSETS.md` — asset provenance record
+- `RELEASE-ACCEPTANCE.md` — final production, isolation, sponsor-chain, and browser acceptance matrix
+- `RESEARCH.md` — bounded formative problem research and limitations
+- `submission/screenshots/` — five final production screenshots with hashes recorded in `ASSETS.md`

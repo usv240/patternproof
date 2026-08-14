@@ -12,10 +12,11 @@ This is a public-safe evidence record. It intentionally excludes cookies, user a
 | Boundary | Production exercise | Result | Public-safe evidence |
 |---|---|---:|---|
 | Dependencies | Clean locked install; complete and production-only audits at low threshold | PASS | 0 known vulnerabilities |
-| Code quality | TypeScript, 149 Node tests, ESLint | PASS | 149/149 |
-| Production build | Next.js optimized build using locked dependencies | PASS | 19/19 static pages generated; all server routes compiled |
+| Code quality | TypeScript, 150 Node tests, ESLint | PASS | 150/150 |
+| Production build | Next.js optimized build using locked dependencies | PASS | 20/20 static pages generated; all server routes compiled |
 | Readiness | GET /api/health after migration 024 and matching deploy | PASS | HTTP 200, {status: ok} |
 | Public judge path | Landing, unified /create, evidence ledger, privacy page, immutable sample | PASS | HTTP 200 over HTTPS; no credentials required |
+| Browser judge simulation | Desktop 1440 x 1000 and mobile 390 x 844; all six sample stages clicked | PASS | zero console errors; zero horizontal overflow; every next/final action remained above the mobile fold |
 | Demo isolation | Exact demo API token, lookalike token, demo approval mutation | PASS | exact token 200; lookalike 404; mutation 403 |
 | Guest isolation | Two fresh anonymous workspaces; cross-tenant brief read and requirement write | PASS | both cross-tenant attempts returned 404 |
 | Private intake | Consent-bound reservation, signed private uploads, normalization/finalization | PASS | every stage returned 2xx |
