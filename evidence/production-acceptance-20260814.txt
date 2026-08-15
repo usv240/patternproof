@@ -1,0 +1,24 @@
+PatternProof hosted production acceptance transcript
+Run date: 2026-08-14
+Target: https://patternproof-nu.vercel.app
+Harness: scripts/live-evidence-acceptance.ps1
+Inputs: rights-cleared synthetic fixtures
+Retries: disabled
+Expected provider budget: 10 units
+
+PASS  Isolated guest workspace
+PASS  Consent-first normalized private intake
+PASS  YouCam Background Removal reference rescue
+PASS  YouCam Clothes VTO V3 body-specific preview
+PASS  YouCam Fabric VTO predefined direction
+PASS  Human construction veto gate
+PASS  Frozen customer consent and immutable approval
+PASS  YouCam Image-to-Video V2 post-approval motion proof
+PASS  Four-feature provenance visible in owner record
+PASS  Customer-photo privacy exit
+PASS  Production chain complete: 4 YouCam jobs, 10 units, 164.5 seconds
+
+Publication boundary: this transcript intentionally excludes credentials, signed
+URLs, provider task identifiers, and customer data. It records a successful hosted
+acceptance run; it is not evidence of physical fit, construction accuracy, or
+customer impact.

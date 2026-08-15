@@ -112,3 +112,19 @@
 .proof-problem-caveat{margin:0;color:#d5ddd1;font-size:11px;font-weight:800;letter-spacing:.04em}
 @media(max-width:720px){.proof-problem-copy{display:block}.proof-problem-metrics{grid-template-columns:1fr 1fr}}
 @media(max-width:420px){.proof-problem-metrics{grid-template-columns:1fr}}
+.proof-sources{margin-top:18px;padding:26px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.proof-sources-header{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);column-gap:28px;align-items:end;margin-bottom:20px}
+.proof-sources-header .eyebrow{grid-column:1/-1}
+.proof-sources-header h2{font-family:Georgia,serif;font-size:clamp(30px,4vw,43px);line-height:1.02;letter-spacing:-1px;margin:5px 0 0}
+.proof-sources-header>p:last-child{margin:0;color:#5f695d;line-height:1.5}
+.proof-source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.proof-source-card{display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;min-height:220px;padding:18px;border:1px solid var(--line);border-radius:12px;background:#fbfaf6}
+.proof-source-level{width:max-content;max-width:100%;padding:5px 8px;border-radius:999px;background:#e7efe2;color:#365932;font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+.proof-source-card h3{font-family:Georgia,serif;font-size:22px;line-height:1.05;margin:2px 0}
+.proof-source-card p{margin:0;color:#5f695d;font-size:13px;line-height:1.48}
+.proof-source-links{display:flex;gap:10px;flex-wrap:wrap;align-self:end}
+.proof-source-links a{color:#172016;font-size:12px;font-weight:900;text-decoration:underline;text-underline-offset:3px}
+.proof-reproduce{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding:14px 16px;border-radius:10px;background:#172016;color:#fff}
+.proof-reproduce strong{margin-right:auto;font-size:13px}
+.proof-reproduce code{padding:7px 9px;border:1px solid #50604d;border-radius:6px;background:#202a20;color:#eef4ea;font-size:11px}
+@media(max-width:800px){.proof-sources-header{grid-template-columns:1fr;gap:10px}.proof-source-grid{grid-template-columns:1fr}.proof-source-card{min-height:0}.proof-reproduce{align-items:stretch}.proof-reproduce strong{width:100%}.proof-reproduce code{overflow-x:auto}}

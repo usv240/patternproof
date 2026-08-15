@@ -136,7 +136,7 @@ export default function SampleCutCard() {
           <div className="judge-links"><Link href="/proof">Open evidence ledger</Link></div>
         </aside>
       </div>
-      <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1&ndash;2-star tailoring complaints &middot; 41 businesses &middot; 3 Indian cities</span><span>32/108 concerned expectation mismatch or delay &mdash; a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence &rarr;</Link></footer>
+      <footer className="judge-research-strip"><strong>Why this workflow exists</strong><span>108 de-identified 1&ndash;2-star tailoring complaints &middot; 41 businesses &middot; 3 Indian cities</span><span>24/108 were coded expectation mismatch; 8 more alleged fabric damage &mdash; a bounded negative-sample finding, not prevalence.</span><Link href="/proof">Audit the evidence &rarr;</Link></footer>
     </section>
   );
 }

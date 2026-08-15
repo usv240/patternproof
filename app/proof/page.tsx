@@ -13,6 +13,62 @@ export const metadata: Metadata = {
 
 const repeatedOutputBytes = 141_631;
 const repeatedOutputDigest = "b53062e7e436dbd96379a9f12d23972c8108c3f454e72ff03dd2483245ef43e9";
+const repository = "https://github.com/usv240/patternproof";
+
+const evidenceSources = [
+  {
+    level: "Recorded observation",
+    title: "Problem research protocol",
+    description:
+      "Aggregate coding tables, inclusion rules, exclusions, and limitations for the 108-complaint formative sample. Exact reviews and identities are withheld for research ethics.",
+    href: `${repository}/blob/main/RESEARCH.md`,
+    linkLabel: "Inspect research record",
+  },
+  {
+    level: "Recorded observation",
+    title: "YouCam validation log",
+    description:
+      "T0-T7 timings, the 3/3 synthetic stress review, signed-URL result, repeat digest, and explicit claim boundaries. Secrets and provider task IDs are omitted.",
+    href: `${repository}/blob/main/D1-RESULTS.md`,
+    linkLabel: "Inspect validation record",
+  },
+  {
+    level: "Independently verifiable",
+    title: "Pinned public assets",
+    description:
+      "Rights, provenance, byte sizes, and SHA-256 hashes for the frozen demo inputs and output. Clone the repository and hash the files yourself.",
+    href: `${repository}/blob/main/ASSETS.md`,
+    linkLabel: "Inspect asset manifest",
+  },
+  {
+    level: "Re-runnable with credentials",
+    title: "Hosted acceptance chain",
+    description:
+      "A sanitized transcript of the production run plus the exact four-feature harness. Re-running the provider portion requires an authorized YouCam key and 10 units.",
+    href: `${repository}/blob/main/evidence/production-acceptance-20260814.txt`,
+    secondaryHref: `${repository}/blob/main/scripts/live-evidence-acceptance.ps1`,
+    linkLabel: "Inspect acceptance transcript",
+    secondaryLabel: "Inspect harness",
+  },
+  {
+    level: "Independently verifiable",
+    title: "Executable contracts",
+    description:
+      "Regression tests bind the published hashes, exact demo-token boundary, four YouCam endpoints, unit costs, and the approval gate to the implementation.",
+    href: `${repository}/tree/main/tests`,
+    linkLabel: "Inspect regression suite",
+  },
+  {
+    level: "Primary reference",
+    title: "Official YouCam API documentation",
+    description:
+      "Perfect Corp's own Apparel VTO and AI API references provide the external feature definitions. PatternProof's measured results remain separately labeled above.",
+    href: "https://yce.perfectcorp.com/ai-api/contents/clothes-api",
+    secondaryHref: "https://yce.perfectcorp.com/en-us/ai-api",
+    linkLabel: "Open Clothes VTO reference",
+    secondaryLabel: "Open AI API catalog",
+  },
+] as const;
 
 export default function ProofPage() {
   const expectationChecksum = evaluateExpectationChecksum({
@@ -118,6 +174,39 @@ export default function ProofPage() {
         </ol>
       </section>
 
+      <section className="proof-sources" aria-labelledby="proof-sources-heading">
+        <header className="proof-sources-header">
+          <p className="eyebrow">Sources and reproduction</p>
+          <h2 id="proof-sources-heading">Inspect the evidence, not just the claim.</h2>
+          <p>
+            Every source below states its evidence level. Published files and code can be checked
+            independently; live-provider and manual-review results are accurately labeled as
+            recorded observations.
+          </p>
+        </header>
+        <div className="proof-source-grid">
+          {evidenceSources.map((source) => (
+            <article className="proof-source-card" key={source.title}>
+              <span className="proof-source-level">{source.level}</span>
+              <h3>{source.title}</h3>
+              <p>{source.description}</p>
+              <div className="proof-source-links">
+                <a href={source.href} target="_blank" rel="noreferrer">{source.linkLabel} &rarr;</a>
+                {"secondaryHref" in source ? (
+                  <a href={source.secondaryHref} target="_blank" rel="noreferrer">
+                    {source.secondaryLabel} &rarr;
+                  </a>
+                ) : null}
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="proof-reproduce">
+          <strong>Fast independent checks after cloning</strong>
+          <code>npm run check</code>
+          <code>sha256sum public/demo/render-olive.jpg</code>
+        </div>
+      </section>
       <aside className="proof-boundary">
         <strong>What this does not prove</strong>
         <p>

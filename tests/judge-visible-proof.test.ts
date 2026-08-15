@@ -18,9 +18,25 @@ test("public evidence ledger exposes bounded determinism and transfer evidence",
   assert.match(page, /Expectation mismatch/);
   assert.match(page, /Bounded negative sample &middot; not prevalence/);
   assert.match(page, /What this does not prove/);
+  assert.match(page, /Inspect the evidence, not just the claim/);
+  assert.match(page, /blob\/main\/RESEARCH\.md/);
+  assert.match(page, /blob\/main\/D1-RESULTS\.md/);
+  assert.match(page, /blob\/main\/ASSETS\.md/);
+  assert.match(page, /production-acceptance-20260814\.txt/);
+  assert.match(page, /live-evidence-acceptance\.ps1/);
+  assert.match(page, /yce\.perfectcorp\.com\/ai-api\/contents\/clothes-api/);
   assert.doesNotMatch(page, /process\.env/);
 });
 
+test("published acceptance transcript is sanitized and records the four-feature chain", () => {
+  const transcript = source("evidence/production-acceptance-20260814.txt");
+  assert.match(transcript, /PASS  YouCam Background Removal reference rescue/);
+  assert.match(transcript, /PASS  YouCam Clothes VTO V3 body-specific preview/);
+  assert.match(transcript, /PASS  YouCam Fabric VTO predefined direction/);
+  assert.match(transcript, /PASS  YouCam Image-to-Video V2 post-approval motion proof/);
+  assert.match(transcript, /4 YouCam jobs, 10 units, 164\.5 seconds/);
+  assert.doesNotMatch(transcript, /sk-[A-Za-z0-9_-]{12,}|eyJ[A-Za-z0-9_-]{16,}|https?:\/\/[^\s?]+\?token=/);
+});
 test("QR codes are generated locally and WhatsApp shares only the current link", () => {
   const actions = source("app/components/ShareActions.tsx");
   assert.match(actions, /QRCode\.toDataURL\(url/);
