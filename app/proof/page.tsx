@@ -39,6 +39,20 @@ export default function ProofPage() {
         </p>
       </header>
 
+      <section className="proof-problem" aria-labelledby="proof-problem-heading">
+        <div className="proof-problem-copy">
+          <p className="eyebrow">Problem evidence</p>
+          <h2 id="proof-problem-heading">Expectation mismatch appears before an irreversible cut.</h2>
+        </div>
+        <ul className="proof-problem-metrics" aria-label="Bounded research sample">
+          <li><strong>108</strong><span>complaints</span></li>
+          <li><strong>41</strong><span>businesses</span></li>
+          <li><strong>3</strong><span>Indian cities</span></li>
+          <li><strong>Expectation mismatch</strong><span>recurring signal</span></li>
+        </ul>
+        <p className="proof-problem-caveat">Bounded negative sample &middot; not prevalence</p>
+      </section>
+
       <section className="proof-grid" aria-label="PatternProof evidence cards">
         <article className="proof-card proof-highlight">
           <p className="eyebrow">Observed repeatability</p>

@@ -23,3 +23,5 @@ test-assets/*.jpeg
 test-assets/*.png
 !test-assets/qa-*.jpg
 .vercel
+# Private recording notes (may contain temporary review URLs or recovery steps)
+DEMO-RECORDING-GUIDE.local.md

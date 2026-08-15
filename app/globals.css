@@ -99,3 +99,16 @@
 .sponsor-chain-boundary { margin: 1rem 0 0; color: #52604f; line-height: 1.5; }
 @media (max-width: 900px) { .sponsor-chain ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .sponsor-chain ol { grid-template-columns: 1fr; } }
+/* Bounded problem evidence: visible where the recording guide expects it. */
+.proof-problem{display:grid;gap:18px;margin:0 0 18px;padding:22px;border:1px solid #40533b;border-radius:16px;background:#172016;color:white}
+.proof-problem-copy{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.proof-problem .eyebrow{margin:0 0 6px;color:var(--lime)}
+.proof-problem h2{max-width:700px;margin:0;font-family:Georgia,serif;font-size:clamp(25px,3vw,36px);line-height:1.05}
+.proof-problem-metrics{display:grid;grid-template-columns:.7fr .7fr .7fr 1.55fr;gap:8px;margin:0;padding:0;list-style:none}
+.proof-problem-metrics li{display:grid;align-content:center;gap:3px;min-height:86px;padding:13px;border:1px solid #ffffff2b;border-radius:10px;background:#ffffff0b}
+.proof-problem-metrics strong{font-family:Georgia,serif;font-size:clamp(25px,2.5vw,32px);line-height:1}
+.proof-problem-metrics li:last-child strong{font-size:clamp(19px,2vw,25px)}
+.proof-problem-metrics span{color:#d5ddd1;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.proof-problem-caveat{margin:0;color:#d5ddd1;font-size:11px;font-weight:800;letter-spacing:.04em}
+@media(max-width:720px){.proof-problem-copy{display:block}.proof-problem-metrics{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.proof-problem-metrics{grid-template-columns:1fr}}

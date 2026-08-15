@@ -12,6 +12,11 @@ test("public evidence ledger exposes bounded determinism and transfer evidence",
   assert.match(page, /b53062e7e436dbd96379a9f12d23972c8108c3f454e72ff03dd2483245ef43e9/);
   assert.match(page, /141_631/);
   assert.match(page, /3 \/ 3 recognizable/);
+  assert.match(page, /108<\/strong><span>complaints/);
+  assert.match(page, /41<\/strong><span>businesses/);
+  assert.match(page, /3<\/strong><span>Indian cities/);
+  assert.match(page, /Expectation mismatch/);
+  assert.match(page, /Bounded negative sample &middot; not prevalence/);
   assert.match(page, /What this does not prove/);
   assert.doesNotMatch(page, /process\.env/);
 });
