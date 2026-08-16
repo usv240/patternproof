@@ -46,13 +46,18 @@ export default function YouCamEvidenceLab({
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [loadingTemplates, setLoadingTemplates] = useState(false);
+  const [templateError, setTemplateError] = useState<string>();
+  const [catalogRetry, setCatalogRetry] = useState(0);
   const [busy, setBusy] = useState<Feature>();
   const [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (!canApplyFabric || templates.length > 0 || loadingTemplates || error) return;
+    if (!canApplyFabric) return;
     let active = true;
     setLoadingTemplates(true);
+    setTemplateError(undefined);
+    setTemplates([]);
+    setSelectedTemplate("");
     fetch("/api/youcam/fabric/templates", { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error(await errorMessage(response));
@@ -61,16 +66,25 @@ export default function YouCamEvidenceLab({
       .then((result) => {
         if (!active) return;
         const catalog = Array.isArray(result.templates) ? result.templates : [];
+        if (catalog.length === 0) {
+          throw new Error("No predefined Fabric VTO directions are available right now.");
+        }
         setTemplates(catalog);
-        setSelectedTemplate(catalog[0]?.id ?? "");
+        setSelectedTemplate(catalog[0].id);
       })
-      .catch((caught) => active && setError(caught instanceof Error ? caught.message : "Fabric directions are unavailable."))
+      .catch((caught) => active && setTemplateError(
+        caught instanceof Error ? caught.message : "Fabric directions are unavailable.",
+      ))
       .finally(() => active && setLoadingTemplates(false));
     return () => { active = false; };
-  }, [canApplyFabric, error, loadingTemplates, templates.length]);
+  }, [canApplyFabric, revisionId, catalogRetry]);
 
   async function run(feature: Feature) {
     if (busy) return;
+    if (feature === "fabric_vto" && !selectedTemplate) {
+      setError("Choose a predefined fabric direction first.");
+      return;
+    }
     setBusy(feature);
     setError(undefined);
     try {
@@ -117,17 +131,34 @@ export default function YouCamEvidenceLab({
     !canCreateMotion && !motionUrl
   ) return null;
 
+  const activeFeature: Feature | undefined = canRescueBackground
+    ? "background_removal"
+    : canApplyFabric
+      ? "fabric_vto"
+      : canCreateMotion
+        ? "approved_motion"
+        : undefined;
+  const heading = activeFeature === "background_removal"
+    ? "First, clean the reference."
+    : activeFeature === "fabric_vto"
+      ? "Preview ready. Choose a fabric direction."
+      : activeFeature === "approved_motion"
+        ? "Approved. Add presentation motion."
+        : !fabricDirection
+          ? "Next, generate the YouCam preview."
+          : "Visual evidence is ready.";
+
   return (
     <section className="youcam-evidence-lab" aria-labelledby="youcam-evidence-heading">
       <header>
         <div>
-          <p className="eyebrow">Optional evidence lab</p>
-          <h3 id="youcam-evidence-heading">Strengthen the visual—without changing the promise.</h3>
+          <p className="eyebrow">YouCam visual tools</p>
+          <h3 id="youcam-evidence-heading">{heading}</h3>
         </div>
-        <span>Server-bounded YouCam tools</span>
+        <span>{activeFeature ? "Current action" : "Server-bounded"}</span>
       </header>
       <div className="evidence-lab-grid">
-        <article className={backgroundReady ? "complete" : ""}>
+        <article className={`${backgroundReady ? "complete" : ""} ${activeFeature === "background_removal" ? "current" : ""}`.trim()}>
           <b>01</b>
           <h4>Reference rescue</h4>
           <p>Remove a distracting background before the core Clothes VTO request.</p>
@@ -138,36 +169,51 @@ export default function YouCamEvidenceLab({
           ) : <small>Available before the first preview.</small>}
         </article>
 
-        <article className={fabricDirection ? "complete" : ""}>
+        <article className={`${fabricDirection ? "complete" : ""} ${activeFeature === "fabric_vto" ? "current" : ""}`.trim()}>
           <b>02</b>
           <h4>Fabric direction</h4>
           <p>Explore one predefined Perfect Corp fabric template before craft review.</p>
           {fabricDirection ? (
             <strong>{fabricDirection.templateTitle}</strong>
           ) : canApplyFabric ? (
-            <>
-              <label>
-                Predefined direction
-                <select
-                  value={selectedTemplate}
-                  onChange={(event) => setSelectedTemplate(event.target.value)}
-                  disabled={Boolean(busy) || loadingTemplates}
+            loadingTemplates ? (
+              <p className="evidence-step-status" role="status">Loading predefined directions...</p>
+            ) : templateError ? (
+              <div className="evidence-step-error" role="alert">
+                <p>{templateError}</p>
+                <button
+                  type="button"
+                  onClick={() => setCatalogRetry((current) => current + 1)}
+                  disabled={Boolean(busy)}
                 >
-                  {templates.map((template) => (
-                    <option value={template.id} key={template.id}>
-                      {template.title} · {template.categoryName}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button type="button" onClick={() => void run("fabric_vto")} disabled={Boolean(busy) || !selectedTemplate}>
-                {busy === "fabric_vto" ? "Applying direction..." : "Apply fabric direction"}
-              </button>
-            </>
+                  Retry directions
+                </button>
+              </div>
+            ) : (
+              <>
+                <label>
+                  Predefined direction
+                  <select
+                    value={selectedTemplate}
+                    onChange={(event) => setSelectedTemplate(event.target.value)}
+                    disabled={Boolean(busy)}
+                  >
+                    {templates.map((template) => (
+                      <option value={template.id} key={template.id}>
+                        {template.title} · {template.categoryName}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button type="button" onClick={() => void run("fabric_vto")} disabled={Boolean(busy) || !selectedTemplate}>
+                  {busy === "fabric_vto" ? "Applying direction..." : "Apply fabric direction"}
+                </button>
+              </>
+            )
           ) : <small>Available after preview, before any human decision.</small>}
         </article>
 
-        <article className={motionUrl ? "complete" : ""}>
+        <article className={`${motionUrl ? "complete" : ""} ${activeFeature === "approved_motion" ? "current" : ""}`.trim()}>
           <b>03</b>
           <h4>Approved motion proof</h4>
           <p>Create a fixed five-second presentation only after customer approval.</p>

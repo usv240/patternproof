@@ -81,6 +81,21 @@ test("product copy refuses swatch, drape, and checksum overclaims", () => {
   assert.match(lab, /predefined visual direction, not an uploaded swatch or drape simulation/i);
   assert.match(lab, /Motion is presentation-only and is excluded from the frozen construction checksum/i);
 });
+test("Fabric VTO catalog loading cannot cancel itself and explains unavailable directions", () => {
+  const lab = source("app/components/YouCamEvidenceLab.tsx");
+  assert.match(lab, /\[canApplyFabric, revisionId, catalogRetry\]/);
+  assert.doesNotMatch(lab, /\[canApplyFabric, error, loadingTemplates, templates\.length\]/);
+  assert.match(lab, /Loading predefined directions/);
+  assert.match(lab, /No predefined Fabric VTO directions are available/);
+  assert.match(lab, /Retry directions/);
+});
+
+test("editable workspace puts the active YouCam action before the comparison and collapses diagnostics", () => {
+  const workspace = source("app/components/TailorWorkspace.tsx");
+  assert.ok(workspace.indexOf("<YouCamEvidenceLab") < workspace.indexOf('<div className="workspace-comparison">'));
+  assert.match(workspace, /<details className="workspace-gate-details"/);
+  assert.match(workspace, /Release gate/);
+});
 test("every evidence route stays bounded, origin-checked, and server-rehosted", () => {
   const createRoute = source("app/api/youcam/evidence/route.ts");
   const pollRoute = source("app/api/youcam/evidence/[jobId]/route.ts");

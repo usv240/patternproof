@@ -561,6 +561,16 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
             </div>
             <p>One customer, one reference, one shared visual before any fabric is cut.</p>
           </div>
+          <YouCamEvidenceLab
+            revisionId={revision.id}
+            backgroundReady={revision.referenceRescued}
+            canRescueBackground={!readOnly && !revision.baseRenderUrl}
+            fabricDirection={revision.fabricDirection}
+            canApplyFabric={!readOnly && Boolean(revision.baseRenderUrl) && !revision.fabricDirection && !humanReviewStarted}
+            motionUrl={revision.motionUrl}
+            canCreateMotion={approved && !revision.motionUrl}
+            onComplete={() => load()}
+          />
           <div className="workspace-comparison">
             <figure className="comparison-card customer-input">
               <figcaption><span>1</span> Customer input</figcaption>
@@ -634,16 +644,6 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
               )}
             </figure>
           </div>
-          <YouCamEvidenceLab
-            revisionId={revision.id}
-            backgroundReady={revision.referenceRescued}
-            canRescueBackground={!readOnly && !revision.baseRenderUrl}
-            fabricDirection={revision.fabricDirection}
-            canApplyFabric={!readOnly && Boolean(revision.baseRenderUrl) && !revision.fabricDirection && !humanReviewStarted}
-            motionUrl={revision.motionUrl}
-            canCreateMotion={approved && !revision.motionUrl}
-            onComplete={() => load()}
-          />
           {revision.renderUrl && (
             <section className="workspace-annotations" aria-labelledby="workspace-annotations-heading">
               <div className="workspace-annotations-heading">
@@ -712,8 +712,19 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
         </div>
 
         <div className="workspace-requirements">
-          <ExpectationChecksum checksum={expectationChecksum} proof={snapshotProof} compact />
-          <CutReadinessPassport readiness={readiness} proof={snapshotProof} compact />
+          <details className="workspace-gate-details" open={approved}>
+            <summary>
+              <span>
+                <small>Release gate</small>
+                <strong>{approved ? "Cut released" : openChangeRequest ? "Revision blocked" : inCustomerReview ? "Awaiting customer" : "Not ready yet"}</strong>
+              </span>
+              <b>{readiness.completed}/{readiness.total} checks</b>
+            </summary>
+            <div className="workspace-gate-details-body">
+              <ExpectationChecksum checksum={expectationChecksum} proof={snapshotProof} compact />
+              <CutReadinessPassport readiness={readiness} proof={snapshotProof} compact />
+            </div>
+          </details>
           <h2>Customer non-negotiables</h2>
           <p className="helper">A not-feasible decision deliberately blocks sharing and approval.</p>
 
