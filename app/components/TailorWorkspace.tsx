@@ -644,15 +644,15 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
               )}
             </figure>
           </div>
-          {revision.renderUrl && (
-            <section className="workspace-annotations" aria-labelledby="workspace-annotations-heading">
-              <div className="workspace-annotations-heading">
+          {revision.renderUrl && revision.requirements.length > 0 && (
+            <details className="workspace-annotations" open={Boolean(pendingPin || revision.annotations.length > 0)}>
+              <summary className="workspace-annotations-heading">
                 <div>
                   <p className="eyebrow">Spatial agreement</p>
                   <h3 id="workspace-annotations-heading">Pin the construction detail.</h3>
                 </div>
                 <span>{revision.annotations.length}</span>
-              </div>
+              </summary>
               {!readOnly && (
                 <p className="annotation-instruction">
                   Click the YouCam result exactly where the customer and tailor need a shared note.
@@ -703,7 +703,7 @@ export default function TailorWorkspace({ briefId }: { briefId: string }) {
                   ))}
                 </ol>
               )}
-            </section>
+            </details>
           )}
           <p className="comparison-disclaimer">
             The YouCam output communicates visual intent. It is not a guarantee of exact fit, measurements,

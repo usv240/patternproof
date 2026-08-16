@@ -90,11 +90,20 @@ test("Fabric VTO catalog loading cannot cancel itself and explains unavailable d
   assert.match(lab, /Retry directions/);
 });
 
-test("editable workspace puts the active YouCam action before the comparison and collapses diagnostics", () => {
+test("editable workspace puts one current action and one compact visual viewport first", () => {
   const workspace = source("app/components/TailorWorkspace.tsx");
+  const lab = source("app/components/YouCamEvidenceLab.tsx");
+  const styles = source("app/globals.css");
   assert.ok(workspace.indexOf("<YouCamEvidenceLab") < workspace.indexOf('<div className="workspace-comparison">'));
+  assert.match(lab, /className="evidence-progress"/);
+  assert.match(lab, /className="evidence-current-action/);
+  assert.doesNotMatch(lab, /className="evidence-lab-grid"/);
+  assert.match(workspace, /revision\.renderUrl && revision\.requirements\.length > 0/);
+  assert.match(workspace, /<details className="workspace-annotations"/);
   assert.match(workspace, /<details className="workspace-gate-details"/);
   assert.match(workspace, /Release gate/);
+  assert.match(styles, /grid-template-columns:minmax\(0,1fr\) 132px/);
+  assert.match(styles, /height:clamp\(350px,44vh,520px\)/);
 });
 test("every evidence route stays bounded, origin-checked, and server-rehosted", () => {
   const createRoute = source("app/api/youcam/evidence/route.ts");

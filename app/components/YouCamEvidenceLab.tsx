@@ -157,80 +157,84 @@ export default function YouCamEvidenceLab({
         </div>
         <span>{activeFeature ? "Current action" : "Server-bounded"}</span>
       </header>
-      <div className="evidence-lab-grid">
-        <article className={`${backgroundReady ? "complete" : ""} ${activeFeature === "background_removal" ? "current" : ""}`.trim()}>
-          <b>01</b>
-          <h4>Reference rescue</h4>
-          <p>Remove a distracting background before the core Clothes VTO request.</p>
-          {backgroundReady ? <strong>Background rescued</strong> : canRescueBackground ? (
-            <button type="button" onClick={() => void run("background_removal")} disabled={Boolean(busy)}>
-              {busy === "background_removal" ? "Rescuing..." : "Rescue this reference"}
-            </button>
-          ) : <small>Available before the first preview.</small>}
-        </article>
+      <ol className="evidence-progress" aria-label="YouCam evidence sequence">
+        <li className={backgroundReady ? "complete" : activeFeature === "background_removal" ? "current" : "locked"}>
+          <b>01</b><span><strong>Reference</strong><small>{backgroundReady ? "Done" : activeFeature === "background_removal" ? "Current" : "Optional"}</small></span>
+        </li>
+        <li className={fabricDirection ? "complete" : activeFeature === "fabric_vto" ? "current" : "locked"}>
+          <b>02</b><span><strong>Fabric</strong><small>{fabricDirection ? "Done" : activeFeature === "fabric_vto" ? "Current" : "After preview"}</small></span>
+        </li>
+        <li className={motionUrl ? "complete" : activeFeature === "approved_motion" ? "current" : "locked"}>
+          <b>03</b><span><strong>Motion</strong><small>{motionUrl ? "Done" : activeFeature === "approved_motion" ? "Current" : "After approval"}</small></span>
+        </li>
+      </ol>
 
-        <article className={`${fabricDirection ? "complete" : ""} ${activeFeature === "fabric_vto" ? "current" : ""}`.trim()}>
-          <b>02</b>
-          <h4>Fabric direction</h4>
-          <p>Explore one predefined Perfect Corp fabric template before craft review.</p>
-          {fabricDirection ? (
-            <strong>{fabricDirection.templateTitle}</strong>
-          ) : canApplyFabric ? (
-            loadingTemplates ? (
-              <p className="evidence-step-status" role="status">Loading predefined directions...</p>
-            ) : templateError ? (
-              <div className="evidence-step-error" role="alert">
-                <p>{templateError}</p>
-                <button
-                  type="button"
-                  onClick={() => setCatalogRetry((current) => current + 1)}
-                  disabled={Boolean(busy)}
-                >
-                  Retry directions
-                </button>
-              </div>
-            ) : (
-              <>
-                <label>
-                  Predefined direction
-                  <select
-                    value={selectedTemplate}
-                    onChange={(event) => setSelectedTemplate(event.target.value)}
-                    disabled={Boolean(busy)}
-                  >
-                    {templates.map((template) => (
-                      <option value={template.id} key={template.id}>
-                        {template.title} · {template.categoryName}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <button type="button" onClick={() => void run("fabric_vto")} disabled={Boolean(busy) || !selectedTemplate}>
-                  {busy === "fabric_vto" ? "Applying direction..." : "Apply fabric direction"}
-                </button>
-              </>
-            )
-          ) : <small>Available after preview, before any human decision.</small>}
+      {activeFeature === "background_removal" && (
+        <article className="evidence-current-action">
+          <div><h4>Reference rescue</h4><p>Remove a distracting background before the core Clothes VTO request.</p></div>
+          <button type="button" onClick={() => void run("background_removal")} disabled={Boolean(busy)}>
+            {busy === "background_removal" ? "Rescuing..." : "Rescue this reference"}
+          </button>
         </article>
+      )}
 
-        <article className={`${motionUrl ? "complete" : ""} ${activeFeature === "approved_motion" ? "current" : ""}`.trim()}>
-          <b>03</b>
-          <h4>Approved motion proof</h4>
-          <p>Create a fixed five-second presentation only after customer approval.</p>
-          {motionUrl ? (
-            <video src={motionUrl} controls playsInline preload="metadata">
-              Your browser cannot play this private motion proof.
-            </video>
-          ) : canCreateMotion ? (
-            <button type="button" onClick={() => void run("approved_motion")} disabled={Boolean(busy)}>
-              {busy === "approved_motion" ? "Creating motion..." : "Create 5-second motion proof"}
-            </button>
-          ) : <small>Unlocks only after the exact Cut Card is approved.</small>}
+      {activeFeature === "fabric_vto" && (
+        <article className="evidence-current-action fabric-action">
+          <div><h4>Fabric direction</h4><p>Choose one predefined Perfect Corp direction before craft review.</p></div>
+          {loadingTemplates ? (
+            <p className="evidence-step-status" role="status">Loading predefined directions...</p>
+          ) : templateError ? (
+            <div className="evidence-step-error" role="alert">
+              <p>{templateError}</p>
+              <button type="button" onClick={() => setCatalogRetry((current) => current + 1)} disabled={Boolean(busy)}>
+                Retry directions
+              </button>
+            </div>
+          ) : (
+            <div className="evidence-fabric-control">
+              <label>
+                Predefined direction
+                <select value={selectedTemplate} onChange={(event) => setSelectedTemplate(event.target.value)} disabled={Boolean(busy)}>
+                  {templates.map((template) => (
+                    <option value={template.id} key={template.id}>
+                      {template.title} · {template.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button type="button" onClick={() => void run("fabric_vto")} disabled={Boolean(busy) || !selectedTemplate}>
+                {busy === "fabric_vto" ? "Applying direction..." : "Apply fabric direction"}
+              </button>
+            </div>
+          )}
         </article>
-      </div>
-      <p className="evidence-lab-caveat">
-        Fabric is a predefined visual direction, not an uploaded swatch or drape simulation. Motion is presentation-only and is excluded from the frozen construction checksum.
-      </p>
+      )}
+
+      {activeFeature === "approved_motion" && (
+        <article className="evidence-current-action">
+          <div><h4>Approved motion proof</h4><p>Create a five-second presentation after the exact Cut Card is approved.</p></div>
+          <button type="button" onClick={() => void run("approved_motion")} disabled={Boolean(busy)}>
+            {busy === "approved_motion" ? "Creating motion..." : "Create motion proof"}
+          </button>
+        </article>
+      )}
+
+      {!activeFeature && !fabricDirection && (
+        <p className="evidence-next-step"><strong>Reference ready.</strong> Generate the body-specific preview below.</p>
+      )}
+      {!activeFeature && fabricDirection && !motionUrl && (
+        <p className="evidence-next-step"><strong>Visual tools complete.</strong> Continue with the human construction review.</p>
+      )}
+      {motionUrl && (
+        <details className="evidence-motion-proof">
+          <summary>View approved 5-second motion proof</summary>
+          <video src={motionUrl} controls playsInline preload="metadata">Your browser cannot play this private motion proof.</video>
+        </details>
+      )}
+      <details className="evidence-caveat-details">
+        <summary>Visual-tool limits</summary>
+        <p>Fabric is a predefined visual direction, not an uploaded swatch or drape simulation. Motion is presentation-only and is excluded from the frozen construction checksum.</p>
+      </details>
       {error && <p className="error" role="alert">{error}</p>}
     </section>
   );
