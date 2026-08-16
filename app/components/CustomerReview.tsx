@@ -531,12 +531,13 @@ export default function CustomerReview({
             measurements, construction, fabric behavior, or final appearance.
           </p>
 
-          <section className="review-annotations" aria-labelledby="annotation-heading">
-            <div className="review-section-heading">
+          <details className="review-annotations review-disclosure">
+            <summary className="review-section-heading">
               <div><p className="eyebrow">Agreement map</p><h2 id="annotation-heading">Pinned decisions</h2></div>
               <span>{revision.annotations.length}</span>
-            </div>
-            {revision.annotations.length === 0 ? (
+            </summary>
+            <div className="review-disclosure-body" aria-labelledby="annotation-heading">
+              {revision.annotations.length === 0 ? (
               <p className="empty-review-notes">
                 No image annotations are attached to this revision.
               </p>
@@ -552,8 +553,9 @@ export default function CustomerReview({
                   </li>
                 ))}
               </ol>
-            )}
-          </section>
+              )}
+            </div>
+          </details>
         </div>
 
         <div className="customer-requirements">
@@ -561,34 +563,41 @@ export default function CustomerReview({
             <ExpectationChecksum checksum={expectationChecksum} proof={snapshotProof} compact />
           )}
           <CutReadinessPassport readiness={readiness} proof={snapshotProof} compact />
-          <section className="review-consent" aria-labelledby="consent-heading">
-            <p className="eyebrow">
-              {isPublicDemo ? "Synthetic public sample" : "Included in this frozen record"}
-            </p>
-            <h2 id="consent-heading">
-              {isPublicDemo ? "Synthetic asset rights" : "Consent and image rights"}
-            </h2>
-            <dl>
-              <div>
-                <dt>Scope</dt>
-                <dd>{payload.consent.scope}</dd>
-              </div>
-              <div>
-                <dt>Policy</dt>
-                <dd>{payload.consent.policy_version}</dd>
-              </div>
-              <div>
-                <dt>Granted</dt>
-                <dd>{formatDate(payload.consent.granted_at, true)}</dd>
-              </div>
-            </dl>
-            <ul aria-label="Consent confirmations">
-              <li>{isPublicDemo ? "Synthetic body image" : "Body-photo processing confirmed"}</li>
-              <li>
-                {isPublicDemo ? "Synthetic reference image" : "Reference-image rights confirmed"}
-              </li>
-            </ul>
-          </section>
+          <details className="review-consent review-disclosure" open={isPublicDemo || undefined}>
+            <summary>
+              <span>
+                <small className="eyebrow">
+                  {isPublicDemo ? "Synthetic public sample" : "Included in this frozen record"}
+                </small>
+                <strong id="consent-heading">
+                  {isPublicDemo ? "Synthetic asset rights" : "Consent and image rights"}
+                </strong>
+              </span>
+              <b>{isPublicDemo ? "Public sample" : "2 confirmations"}</b>
+            </summary>
+            <div className="review-disclosure-body" aria-labelledby="consent-heading">
+              <dl>
+                <div>
+                  <dt>Scope</dt>
+                  <dd>{payload.consent.scope}</dd>
+                </div>
+                <div>
+                  <dt>Policy</dt>
+                  <dd>{payload.consent.policy_version}</dd>
+                </div>
+                <div>
+                  <dt>Granted</dt>
+                  <dd>{formatDate(payload.consent.granted_at, true)}</dd>
+                </div>
+              </dl>
+              <ul aria-label="Consent confirmations">
+                <li>{isPublicDemo ? "Synthetic body image" : "Body-photo processing confirmed"}</li>
+                <li>
+                  {isPublicDemo ? "Synthetic reference image" : "Reference-image rights confirmed"}
+                </li>
+              </ul>
+            </div>
+          </details>
 
           <div className="review-section-heading requirements-heading">
             <div>
