@@ -260,3 +260,19 @@
   .review-visuals img,.review-visuals .image-missing{height:auto;max-height:460px}
   .review-consent.review-disclosure>summary b{display:none}
 }
+
+/* Sticky rail overflow correction.
+   The rails set overflow-x:hidden, so any content that cannot wrap is silently
+   clipped instead of scrolled — the approval label lost "...and I approve", and
+   Revision Replay lost the tail of the share URL. The fix is to let long
+   unbreakable strings (proof digests, bearer URLs) wrap, so nothing ever needs
+   horizontal space in the first place. */
+.customer-approval code{white-space:normal;overflow-wrap:anywhere}
+.workspace-requirements,.customer-requirements{overflow-wrap:break-word}
+.workspace-requirements p,.workspace-requirements li,.workspace-requirements small,
+.workspace-requirements code,.workspace-requirements blockquote,.workspace-requirements label,
+.customer-requirements p,.customer-requirements li,.customer-requirements small,
+.customer-requirements code,.customer-requirements blockquote,.customer-requirements label{
+  min-width:0;overflow-wrap:anywhere}
+.workspace-requirements>*,.customer-requirements>*{min-width:0;max-width:100%}
+.workspace-requirements img,.customer-requirements img{max-width:100%;height:auto}
