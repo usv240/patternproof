@@ -228,7 +228,13 @@ export default function YouCamEvidenceLab({
       {motionUrl && (
         <details className="evidence-motion-proof">
           <summary>View approved 5-second motion proof</summary>
-          <video src={motionUrl} controls playsInline preload="metadata">Your browser cannot play this private motion proof.</video>
+          {/*
+            preload="auto", not "metadata": the provider returns a non-faststart MP4
+            (moov atom after mdat), so a metadata-only preload cannot resolve duration
+            or dimensions and the player renders black at 0:00. The clip is ~1 MB, so
+            fetching it whole is cheap and makes playback reliable.
+          */}
+          <video src={motionUrl} controls playsInline preload="auto">Your browser cannot play this private motion proof.</video>
         </details>
       )}
       <details className="evidence-caveat-details">

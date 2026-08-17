@@ -15,6 +15,7 @@ import ShareActions from "./ShareActions";
 import YouCamEvidenceLab from "./YouCamEvidenceLab";
 
 type Status = "as_shown" | "with_adjustment" | "not_feasible";
+
 type Requirement = {
   id: string;
   label: string;

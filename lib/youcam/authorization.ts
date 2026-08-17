@@ -230,7 +230,7 @@ export async function consumeReservedRenderBudget(input: {
     const message = result.error.message.toLowerCase();
     if (message.includes("guest render limit")) {
       throw new RenderAccessError(
-        "This temporary workspace includes two live previews. Start a fresh private workspace to test another image pair.",
+        "This temporary workspace has reached its live preview limit. Start a fresh private workspace to test another image pair.",
         429,
       );
     }

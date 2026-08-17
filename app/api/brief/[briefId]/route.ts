@@ -49,14 +49,23 @@ function publicRequirement(requirement: RequirementRow) {
   };
 }
 
+// Images render immediately, so a short 5-minute signature is fine for them.
+// The motion proof sits inside a collapsed <details> with preload="metadata",
+// so the browser only fetches it when the viewer expands the disclosure. That
+// can be well after page load, and a 5-minute signature is already expired by
+// then, which renders as a black player stuck at 0:00.
+const SIGNED_URL_TTL_SECONDS = 5 * 60;
+const DEFERRED_MEDIA_TTL_SECONDS = 60 * 60;
+
 async function signedUrl(
   supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
   path: string | null,
+  ttlSeconds: number = SIGNED_URL_TTL_SECONDS,
 ): Promise<string | null> {
   if (!path) return null;
   const result = await supabase.storage
     .from(BRIEF_IMAGE_BUCKET)
-    .createSignedUrl(path, 5 * 60);
+    .createSignedUrl(path, ttlSeconds);
   if (result.error || !result.data?.signedUrl) {
     throw result.error ?? new Error("Signed URL missing");
   }
@@ -189,7 +198,7 @@ export async function GET(
       signedUrl(supabase, referencePath),
       signedUrl(supabase, baseRenderPath),
       signedUrl(supabase, renderPath),
-      signedUrl(supabase, motionPath),
+      signedUrl(supabase, motionPath, DEFERRED_MEDIA_TTL_SECONDS),
     ]);
 
     return NextResponse.json(
