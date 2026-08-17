@@ -1,4 +1,4 @@
-# PatternProof — submission
+# PatternProof submission
 
 > Most AI try-on helps one person decide what to buy. PatternProof helps two people agree on what to make, before fabric becomes irreversible.
 
