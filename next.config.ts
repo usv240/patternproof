@@ -9,6 +9,11 @@ const contentSecurityPolicy = [
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.supabase.co",
+  // The approved motion proof is an MP4 served from a private Supabase bucket via a
+  // signed URL. Without an explicit media-src it inherits default-src 'self', so the
+  // browser blocks the video while images continue to load through img-src, which
+  // renders as a black player stuck at 0:00.
+  "media-src 'self' blob: https://*.supabase.co",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
   "font-src 'self'",
   "manifest-src 'self'",
